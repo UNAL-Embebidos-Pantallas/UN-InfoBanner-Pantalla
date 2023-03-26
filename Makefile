@@ -2,12 +2,12 @@ TARGET       = colorlight_i5
 TOP          = cain_test
 GATE_DIR     = build/gateware
 SOFT_DIR     = build/software
-LITEX_DIR    = /home/carlos/Embedded/litex/
+LITEX_DIR    = /home/xhapa/Documents/EMBEDDED/Litex/
 #RTL_CPU_DIR = ${LITEX_DIR}/pythondata-cpu-vexriscv/pythondata_cpu_vexriscv/verilog
 RTL_CPU_DIR  = ${LITEX_DIR}/pythondata-cpu-lm32/pythondata_cpu_lm32/verilog/rtl/
-ZEPHYR_DIR   = /home/carlos/zephyrproject/
-LITEX_DIR    = /home/carlos/Embedded/litex/
-WORK_DIR     = /home/carlos/Embedded/litex_work/SPI_SDRAM_I5_Litex_Zephyr/
+ZEPHYR_DIR   = /home/xhapa/zephyrproject/
+LITEX_DIR    = /home/xhapa/Documents/EMBEDDED/Litex/
+WORK_DIR     = /home/xhapa/Documents/EMBEDDED/SPI_SDRAM_I5_Litex_Zephyr/
 SERIAL       = /dev/ttyACM0
 
 SERIAL?=/dev/ttyUSB0
