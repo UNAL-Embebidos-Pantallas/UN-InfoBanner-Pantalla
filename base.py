@@ -48,7 +48,13 @@ _i2c = [("i2c", 0,
         
 # CRG -----------------------------------------------------------------------------------------
 class _CRG(Module):
-    def __init__(self, platform, sys_clk_freq, use_internal_osc=False, with_usb_pll=False, with_rst=True, sdram_rate="1:1"):
+    def __init__(
+            self, 
+            platform, sys_clk_freq, 
+            use_internal_osc=False, 
+            with_usb_pll=False, 
+            with_rst=True, 
+            sdram_rate="1:1"):
         self.rst = Signal()
         self.clock_domains.cd_sys = ClockDomain()
         self.clock_domains.cd_sys2x = ClockDomain()
@@ -82,12 +88,12 @@ class BaseSoC(SoCCore):
         platform.add_extension(_leds)
         platform.add_extension(_i2c)
 
-        # SoC with CPU
+        # SoC with CPU ------------------------------------------------------------------------------
         SoCCore.__init__(
             self, platform,
             cpu_type                 = "vexriscv",
             clk_freq                 = sys_clk_freq,
-            ident                    = "LiteX CPU cain_test", ident_version=True,
+            ident                    = "LiteX CPU RGB Matrix", ident_version=True,
             integrated_rom_size      = 0x9000,
             timer_uptime             = True)
         self.submodules.crg = _CRG(
@@ -105,18 +111,24 @@ class BaseSoC(SoCCore):
             origin        = self.mem_map["main_ram"],
             l2_cache_size = 8192,
         )
+        # ETHERNET ---------------------------------------------------------------------------------
         self.ethphy = LiteEthPHYRGMII(
           clock_pads = self.platform.request("eth_clocks", 0),
           pads       = self.platform.request("eth", 0),
           tx_delay = 0)
         self.add_ethernet(phy=self.ethphy)
+
+        # I2C --------------------------------------------------------------------------------------
         self.i2c0 = I2CMaster(pads=platform.request("i2c"))
         
-        # Led
+        # Led --------------------------------------------------------------------------------------
         user_leds = Cat(*[platform.request("user_led", i) for i in range(1)])
         self.submodules.leds = Led(user_leds)
-        self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false?
         self.add_csr("leds")
+        
+        # SPI FLASH MEMORY -------------------------------------------------------------------------
+        self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false?
+
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()
 builder = Builder(soc, output_dir="build", csr_csv="csr.csv", csr_svd="csr.svd", csr_json="csr.json")
