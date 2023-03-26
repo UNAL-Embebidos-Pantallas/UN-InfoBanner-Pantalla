@@ -1,0 +1,1 @@
+west build -b litex_vexriscv /home/carlos/zephyrproject/zephyr/samples/basic/blinky -DDTC_OVERLAY_FILE=/home/carlos/Embedded/litex_work/SPI_SDRAM_I5_Litex_Zephyr/overlay.dts 

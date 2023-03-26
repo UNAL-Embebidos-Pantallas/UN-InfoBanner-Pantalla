@@ -1,0 +1,110 @@
+&uart0 {
+    reg = <0xf0005000 0x4
+        0xf0005004 0x4
+        0xf0005008 0x4
+        0xf000500c 0x4
+        0xf0005010 0x4
+        0xf0005014 0x4
+        0xf0005018 0x4
+        0xf000501c 0x4>;
+    reg-names = "rxtx",
+        "txfull",
+        "rxempty",
+        "ev_status",
+        "ev_pending",
+        "ev_enable",
+        "txempty",
+        "rxfull";
+    interrupts = <0x0 0>;
+};
+&timer0 {
+    reg = <0xf0004800 0x4
+        0xf0004804 0x4
+        0xf0004808 0x4
+        0xf000480c 0x4
+        0xf0004810 0x4
+        0xf0004814 0x4
+        0xf0004818 0x4
+        0xf000481c 0x4
+        0xf0004820 0x4
+        0xf0004824 0x8>;
+    reg-names = "load",
+        "reload",
+        "en",
+        "update_value",
+        "value",
+        "ev_status",
+        "ev_pending",
+        "ev_enable",
+        "uptime_latch",
+        "uptime_cycles";
+    interrupts = <0x1 0>;
+};
+&eth0 {
+    reg = <0xf0001000 0x4
+        0xf0001004 0x4
+        0xf0001008 0x4
+        0xf000100c 0x4
+        0xf0001010 0x4
+        0xf0001014 0x4
+        0xf0001018 0x4
+        0xf000101c 0x4
+        0xf0001020 0x4
+        0xf0001024 0x4
+        0xf0001028 0x4
+        0xf000102c 0x4
+        0xf0001030 0x4
+        0xf0001034 0x4
+        0x80000000 0x2000>;
+    reg-names = "rx_slot",
+        "rx_length",
+        "rx_errors",
+        "rx_ev_status",
+        "rx_ev_pending",
+        "rx_ev_enable",
+        "tx_start",
+        "tx_ready",
+        "tx_level",
+        "tx_slot",
+        "tx_length",
+        "tx_ev_status",
+        "tx_ev_pending",
+        "tx_ev_enable",
+        "buffers";
+    interrupts = <0x2 0>;
+};
+&spi0 {
+    reg = <0xf0003800 0x4
+        0xf0003804 0x4
+        0xf0003808 0x4
+        0xf000380c 0x4
+        0xf0003810 0x4
+        0xf0004000 0x4>;
+    reg-names = "core_mmap_dummy_bits",
+        "core_master_cs",
+        "core_master_phyconfig",
+        "core_master_rxtx",
+        "core_master_status",
+        "phy_clk_divisor";
+};
+&i2c0 {
+    reg = <0xf0002000 0x4
+        0xf0002004 0x4>;
+    reg-names = "write",
+        "read";
+};
+&i2s_rx {
+    status = "disabled";
+};
+&i2s_tx {
+    status = "disabled";
+};
+&clock0 {
+    status = "disabled";
+};
+&ram0 {
+    reg = <0x40000000 0x800000>;
+};
+&dna0 {
+    status = "disabled";
+};
