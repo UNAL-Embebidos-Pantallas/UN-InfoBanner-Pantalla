@@ -7,7 +7,7 @@ LITEX_DIR    = /home/xhapa/Documents/EMBEDDED/Litex/
 RTL_CPU_DIR  = ${LITEX_DIR}/pythondata-cpu-lm32/pythondata_cpu_lm32/verilog/rtl/
 ZEPHYR_DIR   = /home/xhapa/zephyrproject/
 LITEX_DIR    = /home/xhapa/Documents/EMBEDDED/Litex/
-WORK_DIR     = /home/xhapa/Documents/EMBEDDED/SPI_SDRAM_I5_Litex_Zephyr/
+WORK_DIR     = /home/xhapa/Documents/EMBEDDED/Zephyr_Litex/
 SERIAL       = /dev/ttyACM0
 
 SERIAL?=/dev/ttyUSB0

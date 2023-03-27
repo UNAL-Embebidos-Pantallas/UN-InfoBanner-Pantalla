@@ -50,19 +50,19 @@ _i2c = [("i2c", 0,
 ]
 
 _rgb_matrix = [
-        ("latch", 0, Pins("R17"), IOStandard("LVCMOS33")),
+        ("lat", 0, Pins("R17"), IOStandard("LVCMOS33")),
         ("sclk", 0, Pins("T18"), IOStandard("LVCMOS33")),
-        ("address_row", 0, Pins("P17"), IOStandard("LVCMOS33")),
-        ("address_row", 1, Pins("R18"), IOStandard("LVCMOS33")),
-        ("address_row", 2, Pins("C18"), IOStandard("LVCMOS33")),
-        ("address_row", 3, Pins("U16"), IOStandard("LVCMOS33")),
-        ("R0", 0, Pins("J20"), IOStandard("LVCMOS33")),
-        ("G0", 0, Pins("L18"), IOStandard("LVCMOS33")),
-        ("B0", 0, Pins("L18"), IOStandard("LVCMOS33")),
-        ("R1", 0, Pins("G20"), IOStandard("LVCMOS33")),
-        ("G1", 0, Pins("K20"), IOStandard("LVCMOS33")),
-        ("B1", 0, Pins("L20"), IOStandard("LVCMOS33")),
-        ("blank", 0, Pins("M17"), IOStandard("LVCMOS33")),
+        ("r0", 0, Pins("J20"), IOStandard("LVCMOS33")),
+        ("g0", 0, Pins("L18"), IOStandard("LVCMOS33")),
+        ("b0", 0, Pins("M18"), IOStandard("LVCMOS33")),
+        ("r1", 0, Pins("G20"), IOStandard("LVCMOS33")),
+        ("g1", 0, Pins("K20"), IOStandard("LVCMOS33")),
+        ("b1", 0, Pins("L20"), IOStandard("LVCMOS33")),
+        ("a", 0, Pins("P17"), IOStandard("LVCMOS33")),
+        ("b", 0, Pins("R18"), IOStandard("LVCMOS33")),
+        ("c", 0, Pins("C18"), IOStandard("LVCMOS33")),
+        ("d", 0, Pins("U16"), IOStandard("LVCMOS33")),
+        ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
         
 # CRG -----------------------------------------------------------------------------------------
@@ -115,7 +115,7 @@ class BaseSoC(SoCCore):
             cpu_type                 = "vexriscv",
             clk_freq                 = sys_clk_freq,
             ident                    = "LiteX CPU RGB Matrix", ident_version=True,
-            integrated_rom_size      = 0x10000,
+            integrated_rom_size      = 0x9000,
             timer_uptime             = True)
         self.submodules.crg = _CRG(
             platform         = platform, 
@@ -133,36 +133,38 @@ class BaseSoC(SoCCore):
             l2_cache_size = 8192,
         )
         # ETHERNET ---------------------------------------------------------------------------------
-        self.ethphy = LiteEthPHYRGMII(
-          clock_pads = self.platform.request("eth_clocks", 0),
-          pads       = self.platform.request("eth", 0),
-          tx_delay = 0)
-        self.add_ethernet(phy=self.ethphy)
+        # self.ethphy = LiteEthPHYRGMII(
+        #   clock_pads = self.platform.request("eth_clocks", 0),
+        #   pads       = self.platform.request("eth", 0),
+        #   tx_delay = 0)
+        # self.add_ethernet(phy=self.ethphy)
 
         # I2C --------------------------------------------------------------------------------------
-        self.i2c0 = I2CMaster(pads=platform.request("i2c"))
+        # self.i2c0 = I2CMaster(pads=platform.request("i2c"))
         
         # Led --------------------------------------------------------------------------------------
-        user_leds = Cat(*[platform.request("user_led", i) for i in range(1)])
-        self.submodules.leds = Led(user_leds)
-        self.add_csr("leds")
+        # user_leds = Cat(*[platform.request("user_led", i) for i in range(1)])
+        # self.submodules.leds = Led(user_leds)
+        # self.add_csr("leds")
         
         # SPI FLASH MEMORY -------------------------------------------------------------------------
-        self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
+        # self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
 
         # RGB Matrix Controller
-        address_row = Cat(*[platform.request("address_row", i) for i in range(4)])
-        self.submodules.rgb_cntrl = RGBMatrix_Controller(platform.request("latch"),
+        SoCCore.add_csr(self,"rgb_cntrl")
+        self.submodules.rgb_cntrl = RGBMatrix_Controller(platform.request("lat"),
                                                          platform.request("sclk"),
-                                                         platform.request("R0"),
-                                                         platform.request("G0"),
-                                                         platform.request("B0"),
-                                                         platform.request("R1"),
-                                                         platform.request("G1"),
-                                                         platform.request("B1"),
-                                                         address_row,
-                                                         platform.request("blank"))
-        self.add_csr("rgb_cntrl")
+                                                         platform.request("r0"),
+                                                         platform.request("g0"),
+                                                         platform.request("b0"),
+                                                         platform.request("r1"),
+                                                         platform.request("g1"),
+                                                         platform.request("b1"),
+                                                         platform.request("oe"),
+                                                         platform.request("a"),
+                                                         platform.request("b"),
+                                                         platform.request("c"),
+                                                         platform.request("d"))
 
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()

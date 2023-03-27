@@ -4,31 +4,42 @@ from litex.soc.interconnect.csr import *
 from litex.soc.interconnect.csr_eventmanager import *
 
 class RGBMatrix_Controller(Module, AutoCSR):
-    def __init__(self, latch, sclk, R0, G0, B0, R1, G1, B1, address_row, blank):
-        self.clk = ClockSignal() 
-        self.wr_enable = CSRStorage(1)
-        self.rst = CSRStorage(1)
-        self.RGB_data = CSRStatus(12)
+    BPP = 12
+    def __init__(self, lat, sclk, r0, g0, b0, r1, g1, b1, oe, a, b, c, d):
 
-        self.sclk = sclk
-        self.blank = blank
-        self.LATCH = latch
-        self.address_row = address_row
-        self.R0, self.G0, self.B0 = R0, G0, B0
-        self.R1, self.G1, self.B1 = R1, G1, B1
+        self.clk = ClockSignal()
+        self.rst = ResetSignal()
+
+        self.addr = CSRStorage(14, name='addr')
+        self.rgb_indat = CSRStorage(self.BPP, name='rgb_indat')
+        self.rgb_outdat = CSRStorage(self.BPP, name='rgb_outdat')
+        self.wr_en = CSRStorage(name='wr_en')
+        self.rd_en = CSRStorage(name='rd_en')
+
+        self.sclk, self.lat, self.oe, self.a, self.b, self.c, self.d = sclk, lat, oe, a, b, c, d
+        self.r0, self.g0, self.b0, self.r1, self.g1, self.b1 = r0, g0, b0, r1, g1, b1
 
         self.specials += Instance("rgb_matrix_controller",
                             i_clk=self.clk,
-                            i_wr_enable=self.wr_enable.storage,
-                            i_rst=self.rst.storage,
-                            i_RGB_data = self.RGB_data.status,
+                            i_rst=self.rst,
+                            i_addr = self.addr.storage,
+                            i_rgb_indat = self.rgb_indat.storage,
+                            o_rgb_outdat = self.rgb_outdat.storage,
+                            i_wr_en=self.wr_en.storage,
+                            i_rd_en=self.rd_en.storage,
                             o_sclk = self.sclk,
-                            o_latch = self.LATCH,
-                            o_blank = self.blank,
-                            o_address_row = self.address_row,
-                            o_R0= self.R0,
-                            o_G0= self.G0, 
-                            o_B0 = self.B0,
-                            o_R1= self.R1,
-                            o_G1= self.G1, 
-                            o_B1 = self.B1)
+                            o_lat = self.lat,
+                            o_oe = self.oe,
+                            o_a = self.a,
+                            o_b = self.b,
+                            o_c = self.c,
+                            o_d = self.d,
+                            o_r0= self.r0,
+                            o_g0= self.g0, 
+                            o_b0 = self.b0,
+                            o_r1= self.r1,
+                            o_g1= self.g1, 
+                            o_b1 = self.b1)
+        self.submodules.ev = EventManager()
+        self.ev.ok = EventSourceProcess()
+        self.ev.finalize()

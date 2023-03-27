@@ -3,7 +3,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
     <vendor>litex</vendor>
     <name>SOC</name>
-    <description><![CDATA[Litex SoC 2023-03-27 09:35:31]]></description>
+    <description><![CDATA[Litex SoC 2023-03-27 17:35:24]]></description>
 
     <addressUnitBits>8</addressUnitBits>
     <width>32</width>
@@ -14,89 +14,141 @@
 
     <peripherals>
         <peripheral>
-            <name>LEDS</name>
-            <baseAddress>0xF0000000</baseAddress>
-            <groupName>LEDS</groupName>
-            <registers>
-                <register>
-                    <name>OUT</name>
-                    <description><![CDATA[GPIO Output(s) Control.]]></description>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>out</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x4</size>
-                <usage>registers</usage>
-            </addressBlock>
-        </peripheral>
-        <peripheral>
             <name>RGB_CNTRL</name>
-            <baseAddress>0xF0000800</baseAddress>
+            <baseAddress>0xF0000000</baseAddress>
             <groupName>RGB_CNTRL</groupName>
             <registers>
                 <register>
-                    <name>WR_ENABLE</name>
+                    <name>ADDR</name>
                     <addressOffset>0x0000</addressOffset>
                     <resetValue>0x00</resetValue>
                     <size>32</size>
                     <fields>
                         <field>
-                            <name>wr_enable</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
+                            <name>addr</name>
+                            <msb>13</msb>
+                            <bitRange>[13:0]</bitRange>
                             <lsb>0</lsb>
                         </field>
                     </fields>
                 </register>
                 <register>
-                    <name>RST</name>
+                    <name>RGB_INDAT</name>
                     <addressOffset>0x0004</addressOffset>
                     <resetValue>0x00</resetValue>
                     <size>32</size>
                     <fields>
                         <field>
-                            <name>rst</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>RGB_DATA</name>
-                    <addressOffset>0x0008</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>rgb_data</name>
+                            <name>rgb_indat</name>
                             <msb>11</msb>
                             <bitRange>[11:0]</bitRange>
                             <lsb>0</lsb>
                         </field>
                     </fields>
                 </register>
+                <register>
+                    <name>RGB_OUTDAT</name>
+                    <addressOffset>0x0008</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>rgb_outdat</name>
+                            <msb>11</msb>
+                            <bitRange>[11:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>WR_EN</name>
+                    <addressOffset>0x000c</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>wr_en</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>RD_EN</name>
+                    <addressOffset>0x0010</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>rd_en</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>EV_STATUS</name>
+                    <description><![CDATA[This register contains the current raw level of the ok event trigger.  Writes to
+this register have no effect.]]></description>
+                    <addressOffset>0x0014</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>ok</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                            <description><![CDATA[Level of the ``ok`` event]]></description>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>EV_PENDING</name>
+                    <description><![CDATA[When a  ok event occurs, the corresponding bit will be set in this register.  To
+clear the Event, set the corresponding bit in this register.]]></description>
+                    <addressOffset>0x0018</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>ok</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                            <description><![CDATA[`1` if a `ok` event occurred. This Event is triggered on a **falling** edge.]]></description>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>EV_ENABLE</name>
+                    <description><![CDATA[This register enables the corresponding ok events.  Write a ``0`` to this
+register to disable individual events.]]></description>
+                    <addressOffset>0x001c</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>ok</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                            <description><![CDATA[Write a ``1`` to enable the ``ok`` Event]]></description>
+                        </field>
+                    </fields>
+                </register>
             </registers>
             <addressBlock>
                 <offset>0</offset>
-                <size>0xc</size>
+                <size>0x20</size>
                 <usage>registers</usage>
             </addressBlock>
         </peripheral>
         <peripheral>
             <name>CTRL</name>
-            <baseAddress>0xF0001000</baseAddress>
+            <baseAddress>0xF0000800</baseAddress>
             <groupName>CTRL</groupName>
             <registers>
                 <register>
@@ -161,437 +213,8 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
             </addressBlock>
         </peripheral>
         <peripheral>
-            <name>ETHMAC</name>
-            <baseAddress>0xF0001800</baseAddress>
-            <groupName>ETHMAC</groupName>
-            <registers>
-                <register>
-                    <name>SRAM_WRITER_SLOT</name>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_writer_slot</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_WRITER_LENGTH</name>
-                    <addressOffset>0x0004</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_writer_length</name>
-                            <msb>10</msb>
-                            <bitRange>[10:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_WRITER_ERRORS</name>
-                    <addressOffset>0x0008</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_writer_errors</name>
-                            <msb>31</msb>
-                            <bitRange>[31:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_WRITER_EV_STATUS</name>
-                    <description><![CDATA[This register contains the current raw level of the available event trigger.
-Writes to this register have no effect.]]></description>
-                    <addressOffset>0x000c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>available</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[Level of the ``available`` event]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_WRITER_EV_PENDING</name>
-                    <description><![CDATA[When a  available event occurs, the corresponding bit will be set in this
-register.  To clear the Event, set the corresponding bit in this register.]]></description>
-                    <addressOffset>0x0010</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>available</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[`1` if a `available` event occurred. This Event is **level triggered** when the
-signal is **high**.]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_WRITER_EV_ENABLE</name>
-                    <description><![CDATA[This register enables the corresponding available events.  Write a ``0`` to this
-register to disable individual events.]]></description>
-                    <addressOffset>0x0014</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>available</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[Write a ``1`` to enable the ``available`` Event]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_START</name>
-                    <addressOffset>0x0018</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_reader_start</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_READY</name>
-                    <addressOffset>0x001c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_reader_ready</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_LEVEL</name>
-                    <addressOffset>0x0020</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_reader_level</name>
-                            <msb>1</msb>
-                            <bitRange>[1:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_SLOT</name>
-                    <addressOffset>0x0024</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_reader_slot</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_LENGTH</name>
-                    <addressOffset>0x0028</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sram_reader_length</name>
-                            <msb>10</msb>
-                            <bitRange>[10:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_EV_STATUS</name>
-                    <description><![CDATA[This register contains the current raw level of the event0 event trigger.
-Writes to this register have no effect.]]></description>
-                    <addressOffset>0x002c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>event0</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[Level of the ``event0`` event]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_EV_PENDING</name>
-                    <description><![CDATA[When a  event0 event occurs, the corresponding bit will be set in this register.
-To clear the Event, set the corresponding bit in this register.]]></description>
-                    <addressOffset>0x0030</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>event0</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[`1` if a this particular event occurred. This Event is triggered on a **rising**
-edge.]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>SRAM_READER_EV_ENABLE</name>
-                    <description><![CDATA[This register enables the corresponding event0 events.  Write a ``0`` to this
-register to disable individual events.]]></description>
-                    <addressOffset>0x0034</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>event0</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[Write a ``1`` to enable the ``event0`` Event]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>PREAMBLE_CRC</name>
-                    <addressOffset>0x0038</addressOffset>
-                    <resetValue>0x01</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>preamble_crc</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>RX_DATAPATH_PREAMBLE_ERRORS</name>
-                    <addressOffset>0x003c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>rx_datapath_preamble_errors</name>
-                            <msb>31</msb>
-                            <bitRange>[31:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>RX_DATAPATH_CRC_ERRORS</name>
-                    <addressOffset>0x0040</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>rx_datapath_crc_errors</name>
-                            <msb>31</msb>
-                            <bitRange>[31:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x44</size>
-                <usage>registers</usage>
-            </addressBlock>
-            <interrupt>
-                <name>ethmac</name>
-                <value>2</value>
-            </interrupt>
-        </peripheral>
-        <peripheral>
-            <name>ETHPHY</name>
-            <baseAddress>0xF0002000</baseAddress>
-            <groupName>ETHPHY</groupName>
-            <registers>
-                <register>
-                    <name>CRG_RESET</name>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>crg_reset</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>RX_INBAND_STATUS</name>
-                    <addressOffset>0x0004</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>link_status</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>clock_speed</name>
-                            <msb>1</msb>
-                            <bitRange>[1:1]</bitRange>
-                            <lsb>1</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>duplex_status</name>
-                            <msb>2</msb>
-                            <bitRange>[2:2]</bitRange>
-                            <lsb>2</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MDIO_W</name>
-                    <addressOffset>0x0008</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>mdc</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>oe</name>
-                            <msb>1</msb>
-                            <bitRange>[1:1]</bitRange>
-                            <lsb>1</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>w</name>
-                            <msb>2</msb>
-                            <bitRange>[2:2]</bitRange>
-                            <lsb>2</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MDIO_R</name>
-                    <addressOffset>0x000c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>r</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x10</size>
-                <usage>registers</usage>
-            </addressBlock>
-        </peripheral>
-        <peripheral>
-            <name>I2C0</name>
-            <baseAddress>0xF0002800</baseAddress>
-            <groupName>I2C0</groupName>
-            <registers>
-                <register>
-                    <name>W</name>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x05</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>scl</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>oe</name>
-                            <msb>1</msb>
-                            <bitRange>[1:1]</bitRange>
-                            <lsb>1</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                        <field>
-                            <name>sda</name>
-                            <msb>2</msb>
-                            <bitRange>[2:2]</bitRange>
-                            <lsb>2</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>R</name>
-                    <addressOffset>0x0004</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>sda</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[None]]></description>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x8</size>
-                <usage>registers</usage>
-            </addressBlock>
-        </peripheral>
-        <peripheral>
             <name>IDENTIFIER_MEM</name>
-            <baseAddress>0xF0003000</baseAddress>
+            <baseAddress>0xF0001000</baseAddress>
             <groupName>IDENTIFIER_MEM</groupName>
             <registers>
                 <register>
@@ -618,7 +241,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>SDRAM</name>
-            <baseAddress>0xF0003800</baseAddress>
+            <baseAddress>0xF0001800</baseAddress>
             <groupName>SDRAM</groupName>
             <registers>
                 <register>
@@ -791,141 +414,8 @@ register to disable individual events.]]></description>
             </addressBlock>
         </peripheral>
         <peripheral>
-            <name>SPIFLASH_CORE</name>
-            <baseAddress>0xF0004000</baseAddress>
-            <groupName>SPIFLASH_CORE</groupName>
-            <registers>
-                <register>
-                    <name>MMAP_DUMMY_BITS</name>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>mmap_dummy_bits</name>
-                            <msb>7</msb>
-                            <bitRange>[7:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MASTER_CS</name>
-                    <addressOffset>0x0004</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>master_cs</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MASTER_PHYCONFIG</name>
-                    <description><![CDATA[SPI PHY settings.]]></description>
-                    <addressOffset>0x0008</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>len</name>
-                            <msb>7</msb>
-                            <bitRange>[7:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[SPI Xfer length (in bits).]]></description>
-                        </field>
-                        <field>
-                            <name>width</name>
-                            <msb>11</msb>
-                            <bitRange>[11:8]</bitRange>
-                            <lsb>8</lsb>
-                            <description><![CDATA[SPI Xfer width (1/2/4/8).]]></description>
-                        </field>
-                        <field>
-                            <name>mask</name>
-                            <msb>23</msb>
-                            <bitRange>[23:16]</bitRange>
-                            <lsb>16</lsb>
-                            <description><![CDATA[SPI DQ output enable mask (set bits to ``1`` to enable output drivers on DQ
-lines).]]></description>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MASTER_RXTX</name>
-                    <addressOffset>0x000c</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>master_rxtx</name>
-                            <msb>31</msb>
-                            <bitRange>[31:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>MASTER_STATUS</name>
-                    <addressOffset>0x0010</addressOffset>
-                    <resetValue>0x00</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>tx_ready</name>
-                            <msb>0</msb>
-                            <bitRange>[0:0]</bitRange>
-                            <lsb>0</lsb>
-                            <description><![CDATA[TX FIFO is not full.]]></description>
-                        </field>
-                        <field>
-                            <name>rx_ready</name>
-                            <msb>1</msb>
-                            <bitRange>[1:1]</bitRange>
-                            <lsb>1</lsb>
-                            <description><![CDATA[RX FIFO is not empty.]]></description>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x14</size>
-                <usage>registers</usage>
-            </addressBlock>
-        </peripheral>
-        <peripheral>
-            <name>SPIFLASH_PHY</name>
-            <baseAddress>0xF0004800</baseAddress>
-            <groupName>SPIFLASH_PHY</groupName>
-            <registers>
-                <register>
-                    <name>CLK_DIVISOR</name>
-                    <addressOffset>0x0000</addressOffset>
-                    <resetValue>0x01</resetValue>
-                    <size>32</size>
-                    <fields>
-                        <field>
-                            <name>clk_divisor</name>
-                            <msb>7</msb>
-                            <bitRange>[7:0]</bitRange>
-                            <lsb>0</lsb>
-                        </field>
-                    </fields>
-                </register>
-            </registers>
-            <addressBlock>
-                <offset>0</offset>
-                <size>0x4</size>
-                <usage>registers</usage>
-            </addressBlock>
-        </peripheral>
-        <peripheral>
             <name>TIMER0</name>
-            <baseAddress>0xF0005000</baseAddress>
+            <baseAddress>0xF0002000</baseAddress>
             <groupName>TIMER0</groupName>
             <registers>
                 <register>
@@ -1117,7 +607,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>UART</name>
-            <baseAddress>0xF0005800</baseAddress>
+            <baseAddress>0xF0002800</baseAddress>
             <groupName>UART</groupName>
             <registers>
                 <register>
@@ -1283,7 +773,7 @@ register to disable individual events.]]></description>
             <memoryRegion>
                 <name>ROM</name>
                 <baseAddress>0x00000000</baseAddress>
-                <size>0x00010000</size>
+                <size>0x00009000</size>
             </memoryRegion>
             <memoryRegion>
                 <name>SRAM</name>
@@ -1294,16 +784,6 @@ register to disable individual events.]]></description>
                 <name>MAIN_RAM</name>
                 <baseAddress>0x40000000</baseAddress>
                 <size>0x00800000</size>
-            </memoryRegion>
-            <memoryRegion>
-                <name>ETHMAC</name>
-                <baseAddress>0x80000000</baseAddress>
-                <size>0x00002000</size>
-            </memoryRegion>
-            <memoryRegion>
-                <name>SPIFLASH</name>
-                <baseAddress>0x00200000</baseAddress>
-                <size>0x00200000</size>
             </memoryRegion>
             <memoryRegion>
                 <name>CSR</name>
@@ -1322,24 +802,14 @@ register to disable individual events.]]></description>
             <constant name="CONFIG_CPU_HUMAN_NAME" value="VexRiscv" />
             <constant name="CONFIG_CPU_NOP" value="nop" />
             <constant name="CONFIG_L2_SIZE" value="8192" />
-            <constant name="SPIFLASH_PHY_FREQUENCY" value="100000000" />
-            <constant name="SPIFLASH_MODULE_NAME" value="GD25Q16" />
-            <constant name="SPIFLASH_MODULE_TOTAL_SIZE" value="2097152" />
-            <constant name="SPIFLASH_MODULE_PAGE_SIZE" value="256" />
-            <constant name="SPIFLASH_MODULE_QUAD_CAPABLE" value="None" />
             <constant name="CONFIG_CSR_DATA_WIDTH" value="32" />
             <constant name="CONFIG_CSR_ALIGNMENT" value="32" />
             <constant name="CONFIG_BUS_STANDARD" value="WISHBONE" />
             <constant name="CONFIG_BUS_DATA_WIDTH" value="32" />
             <constant name="CONFIG_BUS_ADDRESS_WIDTH" value="32" />
             <constant name="CONFIG_BUS_BURSTING" value="0" />
-            <constant name="ETHMAC_RX_SLOTS" value="2" />
-            <constant name="ETHMAC_TX_SLOTS" value="2" />
-            <constant name="ETHMAC_SLOT_SIZE" value="2048" />
-            <constant name="ETHMAC_INTERRUPT" value="2" />
             <constant name="TIMER0_INTERRUPT" value="1" />
             <constant name="UART_INTERRUPT" value="0" />
-            <constant name="CONFIG_HAS_I2C" value="None" />
         </constants>
     </vendorExtensions>
 </device>
