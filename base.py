@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Python
 import os
 import argparse
@@ -22,9 +23,11 @@ from litespi.modules import GD25Q16 #For various SPI flash memory modules.
 from litespi.opcodes import SpiNorFlashOpCodes as Codes #SPI opcodes for communicating with SPI flash memory.
 from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII #Physical interface for communicating with Ethernet PHYs.
 from litex.soc.cores.bitbang import I2CMaster #Software implementation of I2C.
+from litedram.common import LiteDRAMNativePort
 
 # Own
 from ios import Led
+from rgb_matrix_controller import RGBMatrix_Controller
 
 # IOs ------------------------------------------------------------------------
 _serial = [
@@ -35,7 +38,7 @@ _serial = [
      ),
 ]
 _leds = [
-    ("user_led", 0, Pins("U16"), IOStandard("LVCMOS33")),  # LED en la placa
+    ("user_led", 0, Pins("U17"), IOStandard("LVCMOS33")),  # LED en la placa
     ("user_led", 1, Pins("F3"), IOStandard("LVCMOS33")),  # LED externo
 ]
 
@@ -44,6 +47,22 @@ _i2c = [("i2c", 0,
             Subsignal("scl",   Pins("B18")),
             IOStandard("LVCMOS33"),
         )
+]
+
+_rgb_matrix = [
+        ("latch", 0, Pins("R17"), IOStandard("LVCMOS33")),
+        ("sclk", 0, Pins("T18"), IOStandard("LVCMOS33")),
+        ("address_row", 0, Pins("P17"), IOStandard("LVCMOS33")),
+        ("address_row", 1, Pins("R18"), IOStandard("LVCMOS33")),
+        ("address_row", 2, Pins("C18"), IOStandard("LVCMOS33")),
+        ("address_row", 3, Pins("U16"), IOStandard("LVCMOS33")),
+        ("R0", 0, Pins("J20"), IOStandard("LVCMOS33")),
+        ("G0", 0, Pins("L18"), IOStandard("LVCMOS33")),
+        ("B0", 0, Pins("L18"), IOStandard("LVCMOS33")),
+        ("R1", 0, Pins("G20"), IOStandard("LVCMOS33")),
+        ("G1", 0, Pins("K20"), IOStandard("LVCMOS33")),
+        ("B1", 0, Pins("L20"), IOStandard("LVCMOS33")),
+        ("blank", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
         
 # CRG -----------------------------------------------------------------------------------------
@@ -83,10 +102,12 @@ class BaseSoC(SoCCore):
             "csr":          0x82000000,
         }
         platform = colorlight_i5.Platform()
+        platform.add_source("./rgb_matrix_controller.v")
         sys_clk_freq = int(100e6)
         platform.add_extension(_serial)
         platform.add_extension(_leds)
         platform.add_extension(_i2c)
+        platform.add_extension(_rgb_matrix)
 
         # SoC with CPU ------------------------------------------------------------------------------
         SoCCore.__init__(
@@ -94,7 +115,7 @@ class BaseSoC(SoCCore):
             cpu_type                 = "vexriscv",
             clk_freq                 = sys_clk_freq,
             ident                    = "LiteX CPU RGB Matrix", ident_version=True,
-            integrated_rom_size      = 0x9000,
+            integrated_rom_size      = 0x10000,
             timer_uptime             = True)
         self.submodules.crg = _CRG(
             platform         = platform, 
@@ -127,7 +148,21 @@ class BaseSoC(SoCCore):
         self.add_csr("leds")
         
         # SPI FLASH MEMORY -------------------------------------------------------------------------
-        self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false?
+        self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
+
+        # RGB Matrix Controller
+        address_row = Cat(*[platform.request("address_row", i) for i in range(4)])
+        self.submodules.rgb_cntrl = RGBMatrix_Controller(platform.request("latch"),
+                                                         platform.request("sclk"),
+                                                         platform.request("R0"),
+                                                         platform.request("G0"),
+                                                         platform.request("B0"),
+                                                         platform.request("R1"),
+                                                         platform.request("G1"),
+                                                         platform.request("B1"),
+                                                         address_row,
+                                                         platform.request("blank"))
+        self.add_csr("rgb_cntrl")
 
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()
@@ -135,21 +170,3 @@ builder = Builder(soc, output_dir="build", csr_csv="csr.csv", csr_svd="csr.svd",
 builder.build()
 
 #https://github.com/litex-hub/litespi/issues/52
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

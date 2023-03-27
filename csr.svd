@@ -3,7 +3,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
     <vendor>litex</vendor>
     <name>SOC</name>
-    <description><![CDATA[Litex SoC 2023-03-23 09:10:01]]></description>
+    <description><![CDATA[Litex SoC 2023-03-27 09:35:31]]></description>
 
     <addressUnitBits>8</addressUnitBits>
     <width>32</width>
@@ -41,8 +41,62 @@
             </addressBlock>
         </peripheral>
         <peripheral>
-            <name>CTRL</name>
+            <name>RGB_CNTRL</name>
             <baseAddress>0xF0000800</baseAddress>
+            <groupName>RGB_CNTRL</groupName>
+            <registers>
+                <register>
+                    <name>WR_ENABLE</name>
+                    <addressOffset>0x0000</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>wr_enable</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>RST</name>
+                    <addressOffset>0x0004</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>rst</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>RGB_DATA</name>
+                    <addressOffset>0x0008</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>rgb_data</name>
+                            <msb>11</msb>
+                            <bitRange>[11:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+            </registers>
+            <addressBlock>
+                <offset>0</offset>
+                <size>0xc</size>
+                <usage>registers</usage>
+            </addressBlock>
+        </peripheral>
+        <peripheral>
+            <name>CTRL</name>
+            <baseAddress>0xF0001000</baseAddress>
             <groupName>CTRL</groupName>
             <registers>
                 <register>
@@ -108,7 +162,7 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
         </peripheral>
         <peripheral>
             <name>ETHMAC</name>
-            <baseAddress>0xF0001000</baseAddress>
+            <baseAddress>0xF0001800</baseAddress>
             <groupName>ETHMAC</groupName>
             <registers>
                 <register>
@@ -382,7 +436,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>ETHPHY</name>
-            <baseAddress>0xF0001800</baseAddress>
+            <baseAddress>0xF0002000</baseAddress>
             <groupName>ETHPHY</groupName>
             <registers>
                 <register>
@@ -481,7 +535,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>I2C0</name>
-            <baseAddress>0xF0002000</baseAddress>
+            <baseAddress>0xF0002800</baseAddress>
             <groupName>I2C0</groupName>
             <registers>
                 <register>
@@ -537,12 +591,12 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>IDENTIFIER_MEM</name>
-            <baseAddress>0xF0002800</baseAddress>
+            <baseAddress>0xF0003000</baseAddress>
             <groupName>IDENTIFIER_MEM</groupName>
             <registers>
                 <register>
                     <name>IDENTIFIER_MEM</name>
-                    <description><![CDATA[8 x 40-bit memory]]></description>
+                    <description><![CDATA[8 x 41-bit memory]]></description>
                     <addressOffset>0x0000</addressOffset>
                     <resetValue>0x00</resetValue>
                     <size>32</size>
@@ -564,7 +618,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>SDRAM</name>
-            <baseAddress>0xF0003000</baseAddress>
+            <baseAddress>0xF0003800</baseAddress>
             <groupName>SDRAM</groupName>
             <registers>
                 <register>
@@ -738,7 +792,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>SPIFLASH_CORE</name>
-            <baseAddress>0xF0003800</baseAddress>
+            <baseAddress>0xF0004000</baseAddress>
             <groupName>SPIFLASH_CORE</groupName>
             <registers>
                 <register>
@@ -845,7 +899,7 @@ lines).]]></description>
         </peripheral>
         <peripheral>
             <name>SPIFLASH_PHY</name>
-            <baseAddress>0xF0004000</baseAddress>
+            <baseAddress>0xF0004800</baseAddress>
             <groupName>SPIFLASH_PHY</groupName>
             <registers>
                 <register>
@@ -871,7 +925,7 @@ lines).]]></description>
         </peripheral>
         <peripheral>
             <name>TIMER0</name>
-            <baseAddress>0xF0004800</baseAddress>
+            <baseAddress>0xF0005000</baseAddress>
             <groupName>TIMER0</groupName>
             <registers>
                 <register>
@@ -1063,7 +1117,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>UART</name>
-            <baseAddress>0xF0005000</baseAddress>
+            <baseAddress>0xF0005800</baseAddress>
             <groupName>UART</groupName>
             <registers>
                 <register>
@@ -1229,7 +1283,7 @@ register to disable individual events.]]></description>
             <memoryRegion>
                 <name>ROM</name>
                 <baseAddress>0x00000000</baseAddress>
-                <size>0x00009000</size>
+                <size>0x00010000</size>
             </memoryRegion>
             <memoryRegion>
                 <name>SRAM</name>
