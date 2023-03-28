@@ -102,7 +102,7 @@ class BaseSoC(SoCCore):
             "csr":          0x82000000,
         }
         platform = colorlight_i5.Platform()
-        platform.add_source("./rgb_matrix_controller.v")
+        platform.add_source("./verilog/rgb_matrix_controller.v")
         sys_clk_freq = int(100e6)
         platform.add_extension(_serial)
         platform.add_extension(_leds)
