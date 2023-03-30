@@ -1,26 +1,28 @@
 `default_nettype none
-module rgb_matrix_controller #(
+module rgb_display #(
     parameter WIDTH = 128,
     parameter HEIGHT = 64,
-    parameter BPP = 12,
-    parameter BPC = 4,
-    parameter CHAINED = 1 // number of panels in chain
+    parameter BPP = 12, // Bits per pixel
+    parameter BPC = 4, // Bits per color channel
+    parameter CHAINED = 1 // Number of panels in chain
 )
-(
+(   //Interface
     input wire clk, 
     input wire rst, 
 
-    // Memory signals
+    // Memory IO
     input wire [13:0] addr, 
     input wire [BPP-1: 0] data_in, 
     output reg [BPP-1: 0] data_out,
     input wire wr_en,
     input wire rd_en,
     
+    // LED panel HUB75 IO
     output reg sclk, lat, oe, a, b, c, d,
     output reg r0, g0, b0, r1, g1, b1 
 );
 
+// Memory signals
 wire [13:0] addr_rgb;
 wire [BPP-1: 0] data_out_rgb, data_in_rgb, dat_out_pro;
 wire we_rgb, re_rgb;

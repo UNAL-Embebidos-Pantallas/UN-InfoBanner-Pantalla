@@ -3,7 +3,7 @@ from migen.genlib.cdc import MultiReg
 from litex.soc.interconnect.csr import *
 from litex.soc.interconnect.csr_eventmanager import *
 
-class RGBMatrix_Controller(Module, AutoCSR):
+class RGBDisplay(Module, AutoCSR):
     BPP = 12
     def __init__(self, lat, sclk, r0, g0, b0, r1, g1, b1, oe, a, b, c, d):
 
@@ -19,7 +19,7 @@ class RGBMatrix_Controller(Module, AutoCSR):
         self.sclk, self.lat, self.oe, self.a, self.b, self.c, self.d = sclk, lat, oe, a, b, c, d
         self.r0, self.g0, self.b0, self.r1, self.g1, self.b1 = r0, g0, b0, r1, g1, b1
 
-        self.specials += Instance("rgb_matrix_controller",
+        self.specials += Instance("rgb_display",
                             i_clk=self.clk,
                             i_rst=self.rst,
                             i_addr = self.addr.storage,

@@ -27,7 +27,7 @@ from litedram.common import LiteDRAMNativePort
 
 # Own
 from ios import Led
-from rgb_matrix_controller import RGBMatrix_Controller
+from rgb_display import RGBDisplay
 
 # IOs ------------------------------------------------------------------------
 _serial = [
@@ -102,7 +102,7 @@ class BaseSoC(SoCCore):
             "csr":          0x82000000,
         }
         platform = colorlight_i5.Platform()
-        platform.add_source("./verilog/rgb_matrix_controller.v")
+        platform.add_source("./verilog/rgb_display.v")
         platform.add_source("./verilog/dual_port_memory.v")
         sys_clk_freq = int(100e6)
         platform.add_extension(_serial)
@@ -153,7 +153,7 @@ class BaseSoC(SoCCore):
 
         # RGB Matrix Controller
         SoCCore.add_csr(self,"rgb_cntrl")
-        self.submodules.rgb_cntrl = RGBMatrix_Controller(platform.request("lat"),
+        self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
                                                          platform.request("sclk"),
                                                          platform.request("r0"),
                                                          platform.request("g0"),

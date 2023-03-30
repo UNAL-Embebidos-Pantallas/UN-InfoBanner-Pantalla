@@ -1,8 +1,9 @@
 module dual_port_memory #(
     parameter WIDTH = 128,
     parameter HEIGHT = 64,
-    parameter BPP = 12,
-    parameter CHAINED = 1 // number of panels in chain
+    parameter BPP = 12, // Bits per pixel
+    parameter BPC = 4, // Bits per color channel
+    parameter CHAINED = 1 // Number of panels in chain
 ) (
     input rst,
     input clk,
