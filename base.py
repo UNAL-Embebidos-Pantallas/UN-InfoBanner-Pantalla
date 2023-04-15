@@ -24,6 +24,7 @@ from litespi.opcodes import SpiNorFlashOpCodes as Codes #SPI opcodes for communi
 from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII #Physical interface for communicating with Ethernet PHYs.
 from litex.soc.cores.bitbang import I2CMaster #Software implementation of I2C.
 from litedram.common import LiteDRAMNativePort
+from litescope import LiteScopeAnalyzer
 
 # Own
 from ios import Led
@@ -64,7 +65,14 @@ _rgb_matrix = [
         ("d", 0, Pins("U16"), IOStandard("LVCMOS33")),
         ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
-        
+
+_serial_debug = [("serial_debug", 0,
+            Subsignal("tx",   Pins("G3")),
+            Subsignal("rx",   Pins("G2")),
+            IOStandard("LVCMOS33"),
+        )
+]
+
 # CRG -----------------------------------------------------------------------------------------
 class _CRG(Module):
     def __init__(
@@ -109,6 +117,7 @@ class BaseSoC(SoCCore):
         platform.add_extension(_leds)
         platform.add_extension(_i2c)
         platform.add_extension(_rgb_matrix)
+        platform.add_extension(_serial_debug)
 
         # SoC with CPU ------------------------------------------------------------------------------
         SoCCore.__init__(
@@ -167,6 +176,8 @@ class BaseSoC(SoCCore):
                                                          platform.request("c"),
                                                          platform.request("d"))
 
+        # LitexScope
+        self.add_uartbone(name='serial_debug', baudrate=115200)
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()
 builder = Builder(soc, output_dir="build", csr_csv="csr.csv", csr_svd="csr.svd", csr_json="csr.json")

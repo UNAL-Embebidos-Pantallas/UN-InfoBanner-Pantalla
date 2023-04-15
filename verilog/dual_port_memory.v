@@ -17,6 +17,15 @@ module dual_port_memory #(
 // Dual port RAM with 8192x12 bits resolution
 reg [BPP-1:0] mem [0:CHAINED*WIDTH*HEIGHT-1];
 
+// Initialize memory to 0 on reset
+initial begin
+  if (rst) begin
+    for (int i = 0; i < CHAINED*WIDTH*HEIGHT; i++) begin
+      mem[i] <= 0;
+    end
+  end
+end
+
 // Port A Write and Read
 always @ (posedge clk)
 begin
