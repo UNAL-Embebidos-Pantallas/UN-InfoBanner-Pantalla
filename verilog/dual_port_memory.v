@@ -1,6 +1,6 @@
 module dual_port_memory #(
-    parameter WIDTH = 128,
-    parameter HEIGHT = 64,
+    parameter WIDTH = 96,
+    parameter HEIGHT = 48,
     parameter BPP = 12, // Bits per pixel
     parameter BPC = 4, // Bits per color channel
     parameter CHAINED = 1 // Number of panels in chain
@@ -14,13 +14,13 @@ module dual_port_memory #(
     output reg [BPP-1:0] dat_out_a, dat_out_b 
 );
 
-// Dual port RAM with 8192x12 bits resolution
+// Dual port RAM with 4608x12 bits resolution
 reg [BPP-1:0] mem [0:CHAINED*WIDTH*HEIGHT-1];
 
 // Initialize memory to 0 on reset
 initial begin
   if (rst) begin
-    for (int i = 0; i < CHAINED*WIDTH*HEIGHT; i++) begin
+    for (integer i = 0; i < CHAINED*WIDTH*HEIGHT; i++) begin
       mem[i] <= 0;
     end
   end

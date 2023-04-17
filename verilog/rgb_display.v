@@ -1,7 +1,7 @@
 `default_nettype none
 module rgb_display #(
-    parameter WIDTH = 128,
-    parameter HEIGHT = 64,
+    parameter WIDTH = 96,
+    parameter HEIGHT = 48,
     parameter BPP = 12, // Bits per pixel
     parameter BPC = 4, // Bits per color channel
     parameter CHAINED = 1 // Number of panels in chain
