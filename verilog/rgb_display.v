@@ -27,6 +27,28 @@ wire [13:0] addr_rgb;
 wire [BPP-1: 0] data_out_rgb, data_in_rgb, dat_out_pro;
 wire we_rgb, re_rgb;
 
+wire ce;
+wire clk_en;
+wire RESET;
+reg clk_so;
+assign RESET = ~rst;
+assign clk_out = clk_en & clk_so;
+
+// Clock Divider (100 MHz -> 25 MHz)
+always @(posedge clk, posedge RESET) begin
+    if (RESET) begin
+        clk_so <= 0;
+    end else begin
+        // Contador de ciclos de reloj de entrada (100 MHz)
+        if (count == 4) begin
+            count <= 0;
+            clk_so <= ~clk_so; // Cambiar el estado del reloj dividido cada 4 flancos de subida del reloj de entrada
+        end else begin
+            count <= count + 1;
+        end
+    end
+end
+
 dual_port_memory #(
     .WIDTH(WIDTH), 
     .HEIGHT(HEIGHT), 
