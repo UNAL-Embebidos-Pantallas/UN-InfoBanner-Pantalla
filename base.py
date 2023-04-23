@@ -67,8 +67,8 @@ _rgb_matrix = [
 ]
 
 _serial_debug = [("serial_debug", 0,
-            Subsignal("tx",   Pins("G3")),
-            Subsignal("rx",   Pins("G2")),
+            Subsignal("tx",   Pins("P18")),
+            Subsignal("rx",   Pins("U18")),
             IOStandard("LVCMOS33"),
         )
 ]
@@ -176,8 +176,38 @@ class BaseSoC(SoCCore):
                                                          platform.request("c"),
                                                          platform.request("d"))
 
-        # LitexScope
-        self.add_uartbone(name='serial_debug', baudrate=115200)
+        # LiteScope Analyzer -----------------------------------------------------------------------
+        count = Signal(8)
+        self.sync += count.eq(count + 1)
+        analyzer_signals = [
+          # IBus (could also just added as self.cpu.ibus)
+          self.cpu.ibus.stb,
+          self.cpu.ibus.cyc,
+          self.cpu.ibus.adr,
+          self.cpu.ibus.we,
+          self.cpu.ibus.ack,
+          self.cpu.ibus.sel,
+          self.cpu.ibus.dat_w,
+          self.cpu.ibus.dat_r,
+    
+          # DBus (could also just added as self.cpu.dbus)
+          self.cpu.dbus.stb,
+          self.cpu.dbus.cyc,
+          self.cpu.dbus.adr,
+          self.cpu.dbus.we,
+          self.cpu.dbus.ack,
+          self.cpu.dbus.sel,
+          self.cpu.dbus.dat_w,
+          self.cpu.dbus.dat_r,
+          #self.count
+        ]
+        self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
+            depth        = 1024,
+            clock_domain = "sys",
+            samplerate   = sys_clk_freq,
+            csr_csv      = "analyzer.csv")
+        self.add_csr("analyzer")
+        self.add_uartbone(name="serial_debug", baudrate=115200)
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()
 builder = Builder(soc, output_dir="build", csr_csv="csr.csv", csr_svd="csr.svd", csr_json="csr.json")

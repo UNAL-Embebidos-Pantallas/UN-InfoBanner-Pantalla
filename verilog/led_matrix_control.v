@@ -1,12 +1,12 @@
 module led_matrix_control(
-input clk,
-input rst,
-output reg CE,
-output reg clk_en,
-output reg LAT,
-output reg OE,
-output reg busy,
-output reg [2:0] row_addr
+	input clk,
+	input rst,
+	output reg CE,
+	output reg clk_en,
+	output reg LAT,
+	output reg OE,
+	output reg busy,
+	output reg [3:0] row_addr
 );
 	
 parameter INIT = 4'd0, PRE = 4'd1, DATA = 4'd2, POST = 4'd3, 
