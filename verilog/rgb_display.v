@@ -17,7 +17,7 @@ module rgb_display #(
     input wire rd_en,
     
     // LED panel HUB75 IO
-    output reg sclk, lat, oe, a, b, c, d,
+    output reg sclk, lat, oe, a, b, c, d, e,
     output reg r0, g0, b0, r1, g1, b1 
 );
 
@@ -32,28 +32,13 @@ always @(posedge clk) begin
     clk_25MHz <= ~clk_25MHz;
   end
 end
-assign sclk = clk_en & clk_25MHz;
-
-// Iteration logic
-reg [11:0] addr_b_reg;
-
-always @(posedge clk) begin
-  if (cnt_en) begin
-    if (addr_b_reg == 2303)  // check if maximum address is reached
-      addr_b_reg <= 0;  // wrap around to address 0
-    else
-      addr_b_reg <= addr_b_reg + 1;  // increment address
-  end
-end
-
-assign addr_b = addr_b_reg;
 
 // Memory
 reg [11:0] addr_b;
 reg [31: 0] data_in_b;
 reg [31: 0] data_out_b, data_out_a;  
 wire we_rgb = 0;
-wire re_rgb = cnt_en;
+wire re_rgb;
 reg [15:0] rgb0, rgb1;
 
 dual_port_memory #(
@@ -73,21 +58,21 @@ dual_mem(
     );
 
 // Led control
-reg busy_w;
-wire RESET, clk_en;
-reg cnt_en;
-assign RESET = ~rst;
 
 led_matrix_control #()
 matrix_cntr(
     .clk(clk_25MHz),
-    .rst(RESET),
-    .CE(cnt_en),
-    .clk_en(clk_en),
-    .LAT(lat),
+    .addr_out(addr_b),
+    .data_in_rgb0(rgb0),
+    .data_in_rgb1(rgb1),
+    .rd_en(re_rgb),
+    .sclk(sclk),
+    .latch(lat),
     .OE(oe),
-    .busy(busy_w),
-    .row_addr({a,b,c,d})
+    .r_data({r1, r0}),
+    .g_data({g1, g0}),
+    .b_data({b1, b0}),
+    .row_sel({a,b,c,d,e})
     );
 
 assign rgb0 = data_out_b[0:15];

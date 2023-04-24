@@ -63,6 +63,7 @@ _rgb_matrix = [
         ("b", 0, Pins("R18"), IOStandard("LVCMOS33")),
         ("c", 0, Pins("C18"), IOStandard("LVCMOS33")),
         ("d", 0, Pins("U16"), IOStandard("LVCMOS33")),
+        ("e", 0, Pins("T17"), IOStandard("LVCMOS33")),
         ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
 
@@ -174,7 +175,8 @@ class BaseSoC(SoCCore):
                                                          platform.request("a"),
                                                          platform.request("b"),
                                                          platform.request("c"),
-                                                         platform.request("d"))
+                                                         platform.request("d"),
+                                                         platform.request("e"))
 
         # LiteScope Analyzer -----------------------------------------------------------------------
         count = Signal(8)

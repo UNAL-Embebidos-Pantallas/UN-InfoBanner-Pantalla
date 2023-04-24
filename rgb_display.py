@@ -4,7 +4,7 @@ from litex.soc.interconnect.csr import *
 from litex.soc.interconnect.csr_eventmanager import *
 
 class RGBDisplay(Module, AutoCSR):
-    def __init__(self, lat, sclk, r0, g0, b0, r1, g1, b1, oe, a, b, c, d):
+    def __init__(self, lat, sclk, r0, g0, b0, r1, g1, b1, oe, a, b, c, d, e):
 
         self.clk = ClockSignal()
         self.rst = ResetSignal()
@@ -14,7 +14,7 @@ class RGBDisplay(Module, AutoCSR):
         self.wr_en = CSRStorage(name='wr_en')
         self.rd_en = CSRStorage(name='rd_en')
 
-        self.sclk, self.lat, self.oe, self.a, self.b, self.c, self.d = sclk, lat, oe, a, b, c, d
+        self.sclk, self.lat, self.oe, self.a, self.b, self.c, self.d, self.e = sclk, lat, oe, a, b, c, d, e,
         self.r0, self.g0, self.b0, self.r1, self.g1, self.b1 = r0, g0, b0, r1, g1, b1
 
         self.specials += Instance("rgb_display",
@@ -31,6 +31,7 @@ class RGBDisplay(Module, AutoCSR):
                             o_b = self.b,
                             o_c = self.c,
                             o_d = self.d,
+                            o_e = self.e,
                             o_r0= self.r0,
                             o_g0= self.g0, 
                             o_b0 = self.b0,
