@@ -61,18 +61,18 @@ dual_mem(
 
 led_matrix_control #()
 matrix_cntr(
-    .clk(clk_25MHz),
-    .addr_out(addr_b),
-    .data_in_rgb0(rgb0),
-    .data_in_rgb1(rgb1),
-    .rd_en(re_rgb),
-    .sclk(sclk),
-    .latch(lat),
-    .OE(oe),
-    .r_data({r1, r0}),
-    .g_data({g1, g0}),
-    .b_data({b1, b0}),
-    .row_sel({a,b,c,d,e})
+    .i_clk(clk_25MHz),
+    .o_ram_addr(addr_b),
+    .i_ram_b1_data(rgb0),
+    .i_ram_b2_data(rgb1),
+    .o_ram_read_stb(re_rgb),
+    .o_data_clock(sclk),
+    .o_data_latch(lat),
+    .o_data_blank(oe),
+    .o_data_r({r1, r0}),
+    .o_data_g({g1, g0}),
+    .o_data_b({b1, b0}),
+    .o_row_select({a,b,c,d,e})
     );
 
 assign rgb0 = data_out_b[0:15];
