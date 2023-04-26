@@ -1,256 +1,220 @@
 {
     "csr_bases": {
-        "rgb_cntrl": 4026531840,
-        "analyzer": 4026533888,
-        "ctrl": 4026535936,
-        "identifier_mem": 4026537984,
-        "sdram": 4026540032,
-        "timer0": 4026542080,
-        "uart": 4026544128
+        "analyzer": 4026531840,
+        "ctrl": 4026533888,
+        "identifier_mem": 4026535936,
+        "sdram": 4026537984,
+        "timer0": 4026540032,
+        "uart": 4026542080
     },
     "csr_registers": {
-        "rgb_cntrl_addr_a": {
+        "analyzer_mux_value": {
             "addr": 4026531840,
             "size": 1,
             "type": "rw"
         },
-        "rgb_cntrl_rgb_indat_a": {
+        "analyzer_trigger_enable": {
             "addr": 4026531844,
             "size": 1,
             "type": "rw"
         },
-        "rgb_cntrl_wr_en": {
-            "addr": 4026531848,
-            "size": 1,
-            "type": "rw"
-        },
-        "rgb_cntrl_rd_en": {
-            "addr": 4026531852,
-            "size": 1,
-            "type": "rw"
-        },
-        "rgb_cntrl_ev_status": {
-            "addr": 4026531856,
-            "size": 1,
-            "type": "ro"
-        },
-        "rgb_cntrl_ev_pending": {
-            "addr": 4026531860,
-            "size": 1,
-            "type": "rw"
-        },
-        "rgb_cntrl_ev_enable": {
-            "addr": 4026531864,
-            "size": 1,
-            "type": "rw"
-        },
-        "analyzer_mux_value": {
-            "addr": 4026533888,
-            "size": 1,
-            "type": "rw"
-        },
-        "analyzer_trigger_enable": {
-            "addr": 4026533892,
-            "size": 1,
-            "type": "rw"
-        },
         "analyzer_trigger_done": {
-            "addr": 4026533896,
+            "addr": 4026531848,
             "size": 1,
             "type": "ro"
         },
         "analyzer_trigger_mem_write": {
-            "addr": 4026533900,
+            "addr": 4026531852,
             "size": 1,
             "type": "rw"
         },
         "analyzer_trigger_mem_mask": {
-            "addr": 4026533904,
+            "addr": 4026531856,
             "size": 7,
             "type": "rw"
         },
         "analyzer_trigger_mem_value": {
-            "addr": 4026533932,
+            "addr": 4026531884,
             "size": 7,
             "type": "rw"
         },
         "analyzer_trigger_mem_full": {
-            "addr": 4026533960,
+            "addr": 4026531912,
             "size": 1,
             "type": "ro"
         },
         "analyzer_subsampler_value": {
-            "addr": 4026533964,
+            "addr": 4026531916,
             "size": 1,
             "type": "rw"
         },
         "analyzer_storage_enable": {
-            "addr": 4026533968,
+            "addr": 4026531920,
             "size": 1,
             "type": "rw"
         },
         "analyzer_storage_done": {
-            "addr": 4026533972,
+            "addr": 4026531924,
             "size": 1,
             "type": "ro"
         },
         "analyzer_storage_length": {
-            "addr": 4026533976,
+            "addr": 4026531928,
             "size": 1,
             "type": "rw"
         },
         "analyzer_storage_offset": {
-            "addr": 4026533980,
+            "addr": 4026531932,
             "size": 1,
             "type": "rw"
         },
         "analyzer_storage_mem_level": {
-            "addr": 4026533984,
+            "addr": 4026531936,
             "size": 1,
             "type": "ro"
         },
         "analyzer_storage_mem_data": {
-            "addr": 4026533988,
+            "addr": 4026531940,
             "size": 1,
             "type": "ro"
         },
         "ctrl_reset": {
-            "addr": 4026535936,
+            "addr": 4026533888,
             "size": 1,
             "type": "rw"
         },
         "ctrl_scratch": {
-            "addr": 4026535940,
+            "addr": 4026533892,
             "size": 1,
             "type": "rw"
         },
         "ctrl_bus_errors": {
-            "addr": 4026535944,
+            "addr": 4026533896,
             "size": 1,
             "type": "ro"
         },
         "sdram_dfii_control": {
-            "addr": 4026540032,
+            "addr": 4026537984,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_command": {
-            "addr": 4026540036,
+            "addr": 4026537988,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_command_issue": {
-            "addr": 4026540040,
+            "addr": 4026537992,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_address": {
-            "addr": 4026540044,
+            "addr": 4026537996,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_baddress": {
-            "addr": 4026540048,
+            "addr": 4026538000,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_wrdata": {
-            "addr": 4026540052,
+            "addr": 4026538004,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_rddata": {
-            "addr": 4026540056,
+            "addr": 4026538008,
             "size": 1,
             "type": "ro"
         },
         "timer0_load": {
-            "addr": 4026542080,
+            "addr": 4026540032,
             "size": 1,
             "type": "rw"
         },
         "timer0_reload": {
-            "addr": 4026542084,
+            "addr": 4026540036,
             "size": 1,
             "type": "rw"
         },
         "timer0_en": {
-            "addr": 4026542088,
+            "addr": 4026540040,
             "size": 1,
             "type": "rw"
         },
         "timer0_update_value": {
-            "addr": 4026542092,
+            "addr": 4026540044,
             "size": 1,
             "type": "rw"
         },
         "timer0_value": {
-            "addr": 4026542096,
+            "addr": 4026540048,
             "size": 1,
             "type": "ro"
         },
         "timer0_ev_status": {
-            "addr": 4026542100,
+            "addr": 4026540052,
             "size": 1,
             "type": "ro"
         },
         "timer0_ev_pending": {
-            "addr": 4026542104,
+            "addr": 4026540056,
             "size": 1,
             "type": "rw"
         },
         "timer0_ev_enable": {
-            "addr": 4026542108,
+            "addr": 4026540060,
             "size": 1,
             "type": "rw"
         },
         "timer0_uptime_latch": {
-            "addr": 4026542112,
+            "addr": 4026540064,
             "size": 1,
             "type": "rw"
         },
         "timer0_uptime_cycles": {
-            "addr": 4026542116,
+            "addr": 4026540068,
             "size": 2,
             "type": "ro"
         },
         "uart_rxtx": {
-            "addr": 4026544128,
+            "addr": 4026542080,
             "size": 1,
             "type": "rw"
         },
         "uart_txfull": {
-            "addr": 4026544132,
+            "addr": 4026542084,
             "size": 1,
             "type": "ro"
         },
         "uart_rxempty": {
-            "addr": 4026544136,
+            "addr": 4026542088,
             "size": 1,
             "type": "ro"
         },
         "uart_ev_status": {
-            "addr": 4026544140,
+            "addr": 4026542092,
             "size": 1,
             "type": "ro"
         },
         "uart_ev_pending": {
-            "addr": 4026544144,
+            "addr": 4026542096,
             "size": 1,
             "type": "rw"
         },
         "uart_ev_enable": {
-            "addr": 4026544148,
+            "addr": 4026542100,
             "size": 1,
             "type": "rw"
         },
         "uart_txempty": {
-            "addr": 4026544152,
+            "addr": 4026542104,
             "size": 1,
             "type": "ro"
         },
         "uart_rxfull": {
-            "addr": 4026544156,
+            "addr": 4026542108,
             "size": 1,
             "type": "ro"
         }

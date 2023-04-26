@@ -68,8 +68,8 @@ _rgb_matrix = [
 ]
 
 _serial_debug = [("serial_debug", 0,
-            Subsignal("tx",   Pins("P18")),
-            Subsignal("rx",   Pins("U18")),
+            Subsignal("tx",   Pins("C4")),
+            Subsignal("rx",   Pins("A18")),
             IOStandard("LVCMOS33"),
         )
 ]
@@ -162,21 +162,21 @@ class BaseSoC(SoCCore):
         # self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
 
         # RGB Matrix Controller
-        SoCCore.add_csr(self,"rgb_cntrl")
-        self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
-                                                         platform.request("sclk"),
-                                                         platform.request("r0"),
-                                                         platform.request("g0"),
-                                                         platform.request("b0"),
-                                                         platform.request("r1"),
-                                                         platform.request("g1"),
-                                                         platform.request("b1"),
-                                                         platform.request("oe"),
-                                                         platform.request("a"),
-                                                         platform.request("b"),
-                                                         platform.request("c"),
-                                                         platform.request("d"),
-                                                         platform.request("e"))
+        # SoCCore.add_csr(self,"rgb_cntrl")
+        # self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
+        #                                                  platform.request("sclk"),
+        #                                                  platform.request("r0"),
+        #                                                  platform.request("g0"),
+        #                                                  platform.request("b0"),
+        #                                                  platform.request("r1"),
+        #                                                  platform.request("g1"),
+        #                                                  platform.request("b1"),
+        #                                                  platform.request("oe"),
+        #                                                  platform.request("a"),
+        #                                                  platform.request("b"),
+        #                                                  platform.request("c"),
+        #                                                  platform.request("d"),
+        #                                                  platform.request("e"))
 
         # LiteScope Analyzer -----------------------------------------------------------------------
         count = Signal(8)
