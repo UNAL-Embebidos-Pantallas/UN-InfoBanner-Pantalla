@@ -59,11 +59,11 @@ _rgb_matrix = [
         ("r1", 0, Pins("G20"), IOStandard("LVCMOS33")),
         ("g1", 0, Pins("K20"), IOStandard("LVCMOS33")),
         ("b1", 0, Pins("L20"), IOStandard("LVCMOS33")),
-        ("a", 0, Pins("P17"), IOStandard("LVCMOS33")),
-        ("b", 0, Pins("R18"), IOStandard("LVCMOS33")),
-        ("c", 0, Pins("C18"), IOStandard("LVCMOS33")),
-        ("d", 0, Pins("U16"), IOStandard("LVCMOS33")),
-        ("e", 0, Pins("T17"), IOStandard("LVCMOS33")),
+        ("row", 0, Pins("P17"), IOStandard("LVCMOS33")),
+        ("row", 1, Pins("R18"), IOStandard("LVCMOS33")),
+        ("row", 2, Pins("C18"), IOStandard("LVCMOS33")),
+        ("row", 3, Pins("U16"), IOStandard("LVCMOS33")),
+        ("row", 4, Pins("T17"), IOStandard("LVCMOS33")),
         ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
 
@@ -162,22 +162,29 @@ class BaseSoC(SoCCore):
         # self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
 
         # RGB Matrix Controller
-        # SoCCore.add_csr(self,"rgb_cntrl")
-        # self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
-        #                                                  platform.request("sclk"),
-        #                                                  platform.request("r0"),
-        #                                                  platform.request("g0"),
-        #                                                  platform.request("b0"),
-        #                                                  platform.request("r1"),
-        #                                                  platform.request("g1"),
-        #                                                  platform.request("b1"),
-        #                                                  platform.request("oe"),
-        #                                                  platform.request("a"),
-        #                                                  platform.request("b"),
-        #                                                  platform.request("c"),
-        #                                                  platform.request("d"),
-        #                                                  platform.request("e"))
-
+        SoCCore.add_csr(self,"rgb_cntrl")
+        row = Cat(*[platform.request("row", i) for i in range(4)])
+        self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
+                                                         platform.request("sclk"),
+                                                         platform.request("r0"),
+                                                         platform.request("g0"),
+                                                         platform.request("b0"),
+                                                         platform.request("r1"),
+                                                         platform.request("g1"),
+                                                         platform.request("b1"),
+                                                         platform.request("oe"),
+                                                         row
+                                                )
+        # Analyze signal of RGBMatrix
+        self.signal_oe = self.rgb_cntrl.oe
+        self.signal_lat = self.rgb_cntrl.lat
+        self.signal_sclk = self.rgb_cntrl.sclk
+        self.signal_r0 = self.rgb_cntrl.r0
+        self.signal_r1 = self.rgb_cntrl.r1
+        self.signal_g0 = self.rgb_cntrl.g0
+        self.signal_g1 = self.rgb_cntrl.g1
+        self.signal_b0 = self.rgb_cntrl.b0
+        self.signal_b1 = self.rgb_cntrl.b1
         # LiteScope Analyzer -----------------------------------------------------------------------
         count = Signal(8)
         self.sync += count.eq(count + 1)
@@ -191,6 +198,15 @@ class BaseSoC(SoCCore):
           self.cpu.ibus.sel,
           self.cpu.ibus.dat_w,
           self.cpu.ibus.dat_r,
+          self.signal_oe,
+          self.signal_lat,
+          self.signal_sclk,
+        #   self.signal_r0,
+        #   self.signal_r1,
+        #   self.signal_g0,
+        #   self.signal_g1,
+        #   self.signal_b0,
+        #   self.signal_b1,
     
           # DBus (could also just added as self.cpu.dbus)
           self.cpu.dbus.stb,
@@ -201,7 +217,6 @@ class BaseSoC(SoCCore):
           self.cpu.dbus.sel,
           self.cpu.dbus.dat_w,
           self.cpu.dbus.dat_r,
-          #self.count
         ]
         self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
             depth        = 1024,

@@ -1,4 +1,4 @@
-config,None,data_width,204
+config,None,data_width,207
 config,None,depth,1024
 config,None,samplerate,100000000
 signal,0,__main___basesoc_ibus_stb,1
@@ -9,6 +9,9 @@ signal,0,__main___basesoc_ibus_ack,1
 signal,0,__main___basesoc_ibus_sel,4
 signal,0,__main___basesoc_ibus_dat_w,32
 signal,0,__main___basesoc_ibus_dat_r,32
+signal,0,oe,1
+signal,0,lat,1
+signal,0,sclk,1
 signal,0,__main___basesoc_dbus_stb,1
 signal,0,__main___basesoc_dbus_cyc,1
 signal,0,__main___basesoc_dbus_adr,30
