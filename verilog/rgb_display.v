@@ -14,6 +14,17 @@ module rgb_display (
     // Blink led
 );
 
+    reg [1:0] count;
+    reg clk_25MHz;
+
+    always @(posedge i_clk) begin
+    count <= count + 1;
+    if (count == 2) begin
+        count <= 0;
+        clk_25MHz <= ~clk_25MHz;
+    end
+    end
+
     // How many pixels to shift per row
     localparam pixels_per_row = 48;
 
@@ -57,7 +68,7 @@ module rgb_display (
     reg [$clog2(COLOUR_CYCLE_PRESCALER):0] colour_cycle_counter = 0;
     reg [2:0] colour_register;
 
-    always @(posedge i_clk) begin
+    always @(posedge clk_25MHz) begin
         if (colour_cycle_counter == 0) begin
             colour_register <= colour_register + 1;
             colour_cycle_counter <= COLOUR_CYCLE_PRESCALER;
@@ -98,7 +109,7 @@ module rgb_display (
     reg [2:0] state = s_data_shift;
     // How many pixels remain to be shifted in the 'data_shift' state
     reg [7:0] pixels_to_shift;
-    always @(posedge i_clk) begin
+    always @(posedge clk_25MHz) begin
         case (state)
         s_data_shift: begin // Shift out new column data for this row
             // Se va restando los periodos restantes para cada bit de color

@@ -1,78 +1,142 @@
-module led_matrix_control(
-	input clk,
-	input rst,
-	output reg CE,
-	output reg clk_en,
-	output reg LAT,
-	output reg OE,
-	output reg busy,
-	output reg [3:0] row_addr
-);
-	
-parameter INIT = 4'd0, PRE = 4'd1, DATA = 4'd2, POST = 4'd3, 
-LATCH = 4'd4, OUTPUT = 4'd5, DEAD = 4'd6, INC = 4'd7, DEADinc = 4'd8;
-	
-reg [31:0] cycle_count;
-reg [3:0] state;
-reg [3:0] next_state;
-//Next State Logic
-always @ (*) begin
-case(state)
-	INIT:   next_state = PRE;
-	PRE:    next_state = (cycle_count == 1) ? DATA : PRE;
-	DATA:   next_state = (cycle_count == 29) ? POST : DATA;
-	POST:   next_state = (cycle_count == 1) ? LATCH : POST;
-	LATCH:  next_state = OUTPUT;
-	OUTPUT: next_state = (cycle_count == 15000) ? DEAD : OUTPUT;
-	DEAD:   next_state = (cycle_count == 250) ? INC : DEAD;
-	INC:    next_state = DEADinc;
-	DEADinc:next_state = (cycle_count == 250) ? PRE : DEADinc;
-	default: next_state = INIT;
-endcase
-end
-	
-//Output Logic
-always @ (state) begin
-	case(state)
-	INIT:   begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 0; end
-	PRE:    begin CE = 1'b1; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 1; end
-	DATA:   begin CE = 1'b1; clk_en = 1'b1; LAT = 1'b0; OE = 1'b1; busy = 1; end
-	POST:   begin CE = 1'b0; clk_en = 1'b1; LAT = 1'b0; OE = 1'b1; busy = 1; end
-	LATCH:  begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b1; OE = 1'b1; busy = 0; end
-	OUTPUT: begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b0; busy = 0; end
-	DEAD:   begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 0; end
-	INC:    begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 0; end
-	DEADinc:begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 0; end
-	default:begin CE = 1'b0; clk_en = 1'b0; LAT = 1'b0; OE = 1'b1; busy = 0; end
-endcase	
-end
-	
-//State Transition Logic
-always @ (posedge clk, posedge rst) begin
-	if(rst) begin
-		state <= INIT;
-		cycle_count <= 0;
-	end
-	else if(next_state != state) begin
-		state <= next_state;
-		cycle_count <= 0;
-	end
-	else begin 
-		state <= next_state;
-		cycle_count <= cycle_count + 1; 
-	end
-end
-	
-//Row Address Logic
-always @ (posedge clk, posedge rst) begin
-	if(rst) begin
-		row_addr <= 0;
-	end
-	else if(state == INC) begin
-		row_addr <= row_addr + 1;
-	end
-	else begin 
-		row_addr <= row_addr;
-	end
-end
+module led_matrix_control
+  #(parameter MATRIX_COLS = 96,
+    parameter MATRIX_ROWS = 48,
+    parameter PWM_BITS = 4
+  )
+   (input i_clk,
+    input rst,
+    input [(3*PWM_BITS)-1:0] i_pixel_data1, // New input for pixel1 data
+    input [(3*PWM_BITS)-1:0] i_pixel_data2, // New input for pixel2 data
+    output reg [$clog2(MATRIX_COLS*MATRIX_ROWS)-1:0] o_pixel_addr,
+    output reg o_clk,
+    output reg o_oe,
+    output reg o_latch,
+    output reg [$clog2(MATRIX_ROWS/2)-1:0] o_row_sel,
+    output [2:0] o_color1,
+    output [2:0] o_color2
+  );
+    wire [$clog2(MATRIX_ROWS/2)-1:0] o_row_sel_next = o_row_sel + 1;
+
+    reg [$clog2(MATRIX_COLS):0] pixel_counter;
+    reg [PWM_BITS-1:0] pwm_counter;
+
+    reg first_cycle;
+
+    reg [(3*PWM_BITS)-1:0] pixel_1;
+    reg [(3*PWM_BITS)-1:0] pixel_2;
+
+    assign o_color1 = color(pixel_1);
+    assign o_color2 = color(pixel_2);
+
+    function [2:0] color (input reg [(3*PWM_BITS)-1:0] pixel);
+        color = {
+            (pwm_counter < pixel[PWM_BITS-1:0]),
+            (pwm_counter < pixel[(2*PWM_BITS)-1:PWM_BITS]),
+            (pwm_counter < pixel[(3*PWM_BITS)-1:2*PWM_BITS])
+        };
+    endfunction
+
+    reg [2:0] state;
+
+    localparam STATE_DISPLAY_1  = 3'b000;
+    localparam STATE_DISPLAY_2  = 3'b001;
+    localparam STATE_BLANK_1    = 3'b010;
+    localparam STATE_BLANK_2    = 3'b011;
+    localparam STATE_BLANK_3    = 3'b100;
+
+    always @(posedge i_clk)
+    begin
+        if(rst)
+            begin
+                o_clk         <= 0;
+                o_oe          <= 0;
+                o_latch       <= 0;
+                o_row_sel     <= ~0;
+                o_pixel_addr  <= 0;
+                
+                pixel_1       <= 0;
+                pixel_2       <= 0;
+                temp_pixel    <= 0;
+                
+                pixel_counter <= 0;
+                pwm_counter   <= 0;
+                first_cycle   <= 1;
+                
+                state <= STATE_DISPLAY_2;
+            end
+        else
+            begin
+                case(state)
+                    STATE_DISPLAY_1:
+                    begin
+                        o_oe <= 0;
+                        o_latch <= 0;
+                        o_clk <= !first_cycle;
+
+                        temp_pixel <= i_pixel_data;
+
+                        if(pixel_counter > MATRIX_COLS)
+                        begin
+                            state <= STATE_BLANK_1;
+                        end
+                        else
+                        begin
+                            o_pixel_addr <= pixel_counter + MATRIX_COLS*o_row_sel_next;
+                            state <= STATE_DISPLAY_2;
+                        end
+                    end
+                    STATE_DISPLAY_2:
+                    begin
+                        o_clk <= 0;
+                        first_cycle <= 0;
+
+                        if(!first_cycle)
+                        begin
+                            pixel_1 <= temp_pixel;
+                            pixel_2 <= i_pixel_data;
+                        end
+
+                        o_pixel_addr <= pixel_counter + MATRIX_COLS*(MATRIX_ROWS/2 + o_row_sel_next);
+                        pixel_counter <= pixel_counter + 1;
+
+                        state <= STATE_DISPLAY_1;
+                    end
+                    STATE_BLANK_1:
+                    begin
+                        if(o_pixel_addr != 0)
+                        begin
+                            pixel_1 <= temp_pixel;
+                            pixel_2 <= i_pixel_data;
+                        end
+                        else
+                        begin
+                            pixel_1 <= i_pixel_data;
+                            pixel_2 <= temp_pixel;
+                        end
+
+                        o_clk <= 0;
+                        pixel_counter[$clog2(MATRIX_COLS)] = 0;
+                        state <= STATE_BLANK_2;
+                    end
+                    STATE_BLANK_2:
+                    begin
+                        o_oe <= 1;
+                        state <= STATE_BLANK_3;
+                    end
+                    STATE_BLANK_3:
+                    begin
+                        o_row_sel <= o_row_sel + 1;
+                        o_latch <= 1;
+                        first_cycle <= 1;
+
+                        if(o_row_sel == (MATRIX_ROWS/2)-2)
+                        begin
+                            pwm_counter <= pwm_counter + 1;
+                        end
+
+                        state <= STATE_DISPLAY_1;
+                    end
+                endcase
+            end
+    end
 endmodule
