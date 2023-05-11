@@ -42,6 +42,10 @@ module led_matrix_control
     assign o_data_g = data_g;
     assign o_data_b = data_b;
 
+    reg [11:0] ram_addr = 0;
+    reg ram_read_stb = 0;
+    assign o_ram_addr = ram_addr;
+    assign o_ram_read_stb = ram_read_stb;
 
     // Simple colour cycling logic. We will have a prescaler that counts down
     // to zero twice per second, based on the frequency of our module input
@@ -78,16 +82,15 @@ module led_matrix_control
     assign o_data_b = {colour_register[2], blue_register[counterk]};*/
  
     // Time periods for each color bit
-    reg [8:0] time_periods_x_bit[5]; 
+    reg [8:0] time_periods_x_bit[4]; 
     initial begin
-        time_periods_x_bit[4] = 96; // 2*80 pixels
-        time_periods_x_bit[3] = 48;
-        time_periods_x_bit[2] = 24;
-        time_periods_x_bit[1] = 12;
-        time_periods_x_bit[0] = 6;
+        time_periods_x_bit[3] = 96; // 2*80 pixels
+        time_periods_x_bit[2] = 48;
+        time_periods_x_bit[1] = 24;
+        time_periods_x_bit[0] = 12;
     end
 
-    reg [8:0] time_periods_remaining; // 512 > 160+80+40+20+10 = 310
+    reg [7:0] time_periods_remaining; // 512 > 160+80+40+20+10 = 310
     reg [2:0] counter = 3;
 
     // Register to keep track of where we are in our panel update state machine
@@ -113,11 +116,13 @@ module led_matrix_control
                     data_g <= {i_ram_b1_data[4+counter], i_ram_b2_data[4+counter]};
                     data_b <= {i_ram_b1_data[0+counter], i_ram_b2_data[0+counter]};
                     o_data_clock <= 0;
+                    ram_addr <= ram_addr + 1;
                 end else begin
                     o_data_clock <= 1;
                     pixels_to_shift <= pixels_to_shift - 1;
                 end
             end else
+               ram_read_stb <= 0;
                state <= s_blank_set;
          end
          // In order to update the column data, these shift registers actually
@@ -141,6 +146,7 @@ module led_matrix_control
              // Dependiendo del bit de color en el que este se cambia el tiempo de encendido.
              time_periods_remaining <= time_periods_x_bit[counter];
              // Cuando o_row_select es cero, se hizo una escaneada de bit de color y se pasa al siguente LSB
+             ram_read_stb <= 1;
              if (o_row_select == 0) begin
                 if (counter == 0)
                     // If we hit the lsb, wrap to the msb

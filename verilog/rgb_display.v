@@ -27,13 +27,11 @@ reg [1:0] o_data_g;
 reg [1:0] o_data_b;
 
 // Memory
-reg [11:0] addr_b = 12'b001010101010;
+reg [11:0] addr_b;
 reg [23: 0] data_in_b;
 reg [23: 0] data_out_b, data_out_a;  
 wire we_rgb = 0;
-wire re_rgb = 1;
-wire o_ram_read_stb;
-reg [11:0] o_ram_addr;
+wire re_rgb;
 
 reg [1:0] count;
 reg clk_25MHz;
@@ -66,10 +64,10 @@ led_matrix_control #()
 matrix_cntrl(
     .i_clk(clk_25MHz),
     .i_rst(i_rst),
-    .o_ram_addr(o_ram_addr),
+    .o_ram_addr(addr_b),
     .i_ram_b1_data(data_out_b[23:12]),
     .i_ram_b2_data(data_out_b[11:0]),
-    .o_ram_read_stb(o_ram_read_stb),
+    .o_ram_read_stb(re_rgb),
     .o_data_clock(sclk),
     .o_data_latch(lat),
     .o_data_blank(oe),
