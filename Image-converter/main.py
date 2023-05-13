@@ -1,34 +1,41 @@
 from PIL import Image
 import numpy as np
 
-# Cargar imagen
-img = Image.open('images.jpeg')
+# Load image
+img = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/images.png')
 
-# Cambiar tamaño a 96x48
+# Resize image to 96x48
 img = img.resize((96, 48))
+rows = int(48/2)
+cols = 96
 
-# Convertir a modo RGB
-img = img.convert('RGB')
+# Convert to RGB mode
+img = img.convert("RGB")
 
-# Convertir a arreglo de numpy
+# Convert to numpy array
 img_array = np.array(img)
 
-# Redondear valores a los valores posibles de 2 bits
-img_array = np.round(img_array / 16) * 64
+# Create Image object from numpy array
+img_out = Image.fromarray(img_array)
 
-# Convertir de vuelta a imagen de PIL
-img = Image.fromarray(np.uint8(img_array))
+# Save image as .bmp
+img_out.save('Image-converter/output.bmp')
 
-# Guardar imagen en formato BMP
-img.save('imagen_4bits.bmp')
+# Scale RGB values to 4 bits (range 0-15)
+img_array_444 = np.round(img_array * 15/255).astype(np.uint8)
 
-# Exportar datos a archivo de texto
-with open('imagen_2bits.txt', 'w') as f:
-    for row in img_array:
-        for pixel in row:
-            # Obtener valores de cada canal en binario de 2 bits
-            r, g, b = format(int(pixel[0] // 64), '02b'), format(int(pixel[1] // 64), '02b'), format(int(pixel[2] // 64), '02b')
+# Create text file
+with open('Image-converter/output.txt', 'w') as f:
+    # Iterate over each row and column of the image
+    for idx in range(rows):
+        for px_idx in range(cols):
+            # Scale R, G, B values to 4 bits and convert to binary format
+            r_bin = bin(img_array_444[idx][px_idx][0])[2:].zfill(4)
+            g_bin = bin(img_array_444[idx][px_idx][1])[2:].zfill(4)
+            b_bin = bin(img_array_444[idx][px_idx][2])[2:].zfill(4)
+            r2_bin = bin(img_array_444[idx+rows][px_idx][0])[2:].zfill(4)
+            g2_bin = bin(img_array_444[idx+rows][px_idx][1])[2:].zfill(4)
+            b2_bin = bin(img_array_444[idx+rows][px_idx][2])[2:].zfill(4)
 
-            # Escribir valores en archivo de texto en orden R, G, B
-            f.write(f"{r}{g}{b} ")
-        f.write('\n')
+            # Write R, G, B values to a line concatenated with a space
+            f.write(f"{r_bin}{g_bin}{b_bin}{r2_bin}{g2_bin}{b2_bin}\n")

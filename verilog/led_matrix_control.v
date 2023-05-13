@@ -63,7 +63,6 @@ module led_matrix_control
             colour_cycle_counter <= COLOUR_CYCLE_PRESCALER;
         end else
             colour_cycle_counter <= colour_cycle_counter - 1;
-            counterk <= counterk + 1;
     end
 
     // Connect the output colour data lines to our colour counter
@@ -109,16 +108,16 @@ module led_matrix_control
             // 
             if (pixels_to_shift > 0) begin
                 // We have data to shift still
-                if (o_data_clock == 1) begin
+                if (o_data_clock == 0) begin
                     // For this test, we have hardcoded our colour output, so
                     // there is nothing to do per-pixel here
                     data_r <= {i_ram_b1_data[8+counter], i_ram_b2_data[8+counter]};
                     data_g <= {i_ram_b1_data[4+counter], i_ram_b2_data[4+counter]};
                     data_b <= {i_ram_b1_data[0+counter], i_ram_b2_data[0+counter]};
-                    o_data_clock <= 0;
+                    o_data_clock <= 1;
                     ram_addr <= ram_addr + 1;
                 end else begin
-                    o_data_clock <= 1;
+                    o_data_clock <= 0;
                     pixels_to_shift <= pixels_to_shift - 1;
                 end
             end else
