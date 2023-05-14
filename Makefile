@@ -31,12 +31,12 @@ gateware:
 firmware: ${SOFT_DIR}/common.mak
 	$(MAKE) -C firmware/ -f Makefile all
 
-overlay: 
+overlay:
 	${LITEX_DIR}/litex/litex/tools/litex_json2dts_zephyr.py --dts overlay.dts --config overlay.config csr.json
 app_zephyr: overlay
 	west build -b litex_vexriscv ${ZEPHYR_DIR}/zephyr/samples/subsys/shell/shell_module/  -DDTC_OVERLAY_FILE=${WORK_DIR}overlay.dts	
 
-configure:
+configure: app_zephyr
 	sudo openFPGALoader -b colorlight-i5 -m ${GATE_DIR}/${TARGET}.bit 
 
 load_zephyr_app: configure

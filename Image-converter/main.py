@@ -25,7 +25,7 @@ img_out.save('Image-converter/output.bmp')
 img_array_444 = np.round(img_array * 15/255).astype(np.uint8)
 
 # Create text file
-with open('Image-converter/output.txt', 'w') as f:
+with open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/verilog/image.mem', 'w') as f:
     # Iterate over each row and column of the image
     for idx in range(rows):
         for px_idx in range(cols):

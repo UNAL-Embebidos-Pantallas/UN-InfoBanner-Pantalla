@@ -63,7 +63,7 @@ _rgb_matrix = [
         ("row", 1, Pins("R18"), IOStandard("LVCMOS33")),
         ("row", 2, Pins("C18"), IOStandard("LVCMOS33")),
         ("row", 3, Pins("U16"), IOStandard("LVCMOS33")),
-        ("row", 4, Pins("T17"), IOStandard("LVCMOS33")),
+        ("row", 4, Pins("U18"), IOStandard("LVCMOS33")),
         ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
 
@@ -163,7 +163,7 @@ class BaseSoC(SoCCore):
 
         # RGB Matrix Controller
         SoCCore.add_csr(self,"rgb_cntrl")
-        row = Cat(*[platform.request("row", i) for i in range(4)])
+        row = Cat(*[platform.request("row", i) for i in range(5)])
         self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
                                                          platform.request("sclk"),
                                                          platform.request("r0"),
