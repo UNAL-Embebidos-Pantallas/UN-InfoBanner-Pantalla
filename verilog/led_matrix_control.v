@@ -1,141 +1,123 @@
 module led_matrix_control
-  #()(
-    // Input clock to our panel driver
-    input wire i_clk,
-    input wire i_rst,
-    // Memory interface
-    output wire [11:0] o_ram_addr,
-    input wire [11:0] i_ram_b1_data,
-    input wire [11:0] i_ram_b2_data,
-    output wire o_ram_read_stb,
+(
+    input wire clk_25MHz,
+    output wire [4:0] row_addr,
+    output wire blank,
+    output wire latch,
+    output wire next_line_begin,
+    input wire next_line_done,
+    output wire [4:0] next_line_addr,
+    output wire [6:0] next_line_pwm,
+);
 
-    // Shift register controls for the column data
-    output reg o_data_clock,
-    output reg o_data_latch,
-    output reg o_data_blank,
-    // Data lines to be shifted
-    output reg [1:0] o_data_r,
-    output reg [1:0] o_data_g,
-    output reg [1:0] o_data_b,
-    // Inputs to the row select demux
-    output reg [4:0] o_row_select,
-    // Blink led
-  );
-    // How many pixels to shift per row
-    localparam pixels_per_row = 96;
+reg blank = 1'b1;
+reg latch = 1'b0;
 
-    // State machine IDs
-    localparam
-        s_data_shift = 0,
-        s_lat_OE_set = 1,
-        s_increment_row = 2,
-        s_latch_clear = 3,
-        s_blank_clear = 4;
+reg [4:0] row_counter;
+reg [6:0] pwm_counter;
+assign row_addr = row_counter;
+assign next_line_pwm = pwm_counter;
+assign next_line_addr = row_addr;
 
-    reg [1:0] data_r = 0;
-    reg [1:0] data_g = 0;
-    reg [1:0] data_b = 0;
+reg next_line_begin;
 
-    // Wire up outputs
-    assign o_data_r = data_r;
-    assign o_data_g = data_g;
-    assign o_data_b = data_b;
+parameter S_DEFAULT = 0;
+parameter S_AFTER_FIRST_LINE_BEGIN = 1;
+parameter S_DATA_SHIFT = 2;
+parameter S_BLANK_SET = 3;
+parameter S_LATCH_SET = 4;
+parameter S_DEAD_TIME_SET = 5;
+parameter S_INCRE_ROW = 6;
+parameter S_LATCH_CLR = 7;
+parameter S_UNBLANK = 8;
+parameter S_DEAD_TIME_CLR = 9;
 
-    reg [11:0] ram_addr = 0;
-    reg ram_read_stb = 0;
-    assign o_ram_addr = ram_addr;
-    assign o_ram_read_stb = ram_read_stb;
+reg [31:0] dead_time_counter = 0; 
+reg [3:0] state = S_DEFAULT;
 
-    // Time periods for each color bit
-    reg [8:0] time_periods_x_bit[4]; 
-    initial begin
-        time_periods_x_bit[3] = 96; // 2*80 pixels
-        time_periods_x_bit[2] = 48;
-        time_periods_x_bit[1] = 24;
-        time_periods_x_bit[0] = 12;
-    end
+always @(posedge clk_25MHz) begin
+    case (state)
+        S_DEFAULT : begin
+            state <= S_AFTER_FIRST_LINE_BEGIN;
+            next_line_begin <=1'b1;
+        end
 
-    reg [7:0] time_periods_remaining; // 512 > 160+80+40+20+10 = 310
-    reg [1:0] counter = 3;
+        S_AFTER_FIRST_LINE_BEGIN : begin
+            next_line_begin <= 1'b0;
+            state <= S_DATA_SHIFT;
+        end
 
-    // Register to keep track of where we are in our panel update state machine
-    reg [2:0] state = s_data_shift;
-    // How many pixels remain to be shifted in the 'data_shift' state
-    reg [7:0] pixels_to_shift = 96;
-    always @(posedge i_clk) begin
-        case (state)
-        s_data_shift: begin // Shift out new column data for this row
-            // Se va restando los periodos restantes para cada bit de color
-            if (time_periods_remaining == 0) begin
-                o_data_blank <= 0;
-            end else begin
-                time_periods_remaining <= time_periods_remaining - 1;
-            end
-            // 
-            if (pixels_to_shift > 0) begin
-                // We have data to shift still
-                if (o_data_clock == 1) begin
-                    // For this test, we have hardcoded our colour output, so
-                    // there is nothing to do per-pixel here
-                    data_r <= {i_ram_b1_data[8+counter], i_ram_b2_data[8+counter]};
-                    data_g <= {i_ram_b1_data[4+counter], i_ram_b2_data[4+counter]};
-                    data_b <= {i_ram_b1_data[0+counter], i_ram_b2_data[0+counter]};
-                    o_data_clock <= 0;
-                    // ram_addr<=ram_addr + 1;
-                end else begin
-                    o_data_clock <= 1;
-                    pixels_to_shift <= pixels_to_shift - 1;
-                end
-            end else
-               ram_read_stb <= 0;
-               state <= s_lat_OE_set;
-         end
-         // In order to update the column data, these shift registers actually
-         // seem to require the output is disabled before they will latch new
-         // data. So to perform an update, we have a series of steps here that
-         // - Blank the output
-         // - Latch the new data
-         // - Increment to the new row address
-         // - Reset the latch state
-         // - Unblank the display.
-         // Each step has been made it's own state for clarity; if one wanted
-         // to save a little more on logic some of these steps can be merged.
-         s_lat_OE_set: begin 
-            o_data_latch <= 1; 
-            o_data_blank <= 1; 
-            state <= s_increment_row; 
-         end
+        // Main loop
 
-         s_increment_row: begin 
-            if (o_row_select == 23)begin
-                o_row_select<=0;
+        S_DATA_SHIFT : begin
+            if (next_line_done)begin
+                state <= S_BLANK_SET;
+            end   
+        end
+
+        S_BLANK_SET : begin
+            blank <= 1;
+            state <= S_LATCH_SET;
+        end
+
+        //Dead time
+
+        // S_DEAD_TIME_SET : begin
+        //     if (dead_time_counter == 200) begin
+        //         state <= S_LATCH_SET;
+        //     end
+        //     else
+        //         state <= S_DEAD_TIME_SET;
+        // end
+
+        S_LATCH_SET : begin
+            latch <= 1;           
+            state <= S_INCRE_ROW;
+        end
+
+        S_INCRE_ROW : begin
+            if(row_counter == 23)begin
+                row_counter <= 0;
             end
             else begin
-                o_row_select <= o_row_select + 1;
+                row_counter <= row_counter + 1;
             end
-            state <= s_latch_clear; 
-            end
+            state <= S_LATCH_CLR;     
+        end
 
-         s_latch_clear: begin 
-            o_data_latch <= 0; 
-            state <= s_blank_clear; 
-            end
-         s_blank_clear: begin
-             o_data_blank <= 0;
-             pixels_to_shift <= pixels_per_row;
-             // Dependiendo del bit de color en el que este se cambia el tiempo de encendido.
-             time_periods_remaining <= time_periods_x_bit[counter];
-             // Cuando o_row_select es cero, se hizo una escaneada de bit de color y se pasa al siguente LSB
-             ram_read_stb <= 1;
-             if (o_row_select == 0) begin
-                if (counter == 0)
-                    // If we hit the lsb, wrap to the msb
-                    counter <= 3;
-                else
-                    counter <= counter - 1;
-             end
-             state <= s_data_shift;
-         end
-        endcase
+        //Dead time
+
+        // S_DEAD_TIME_CLR : begin
+        //     if (dead_time_counter == 25) begin
+        //         state <= S_LATCH_CLR;
+        //     end
+        //     else
+        //         state <= S_DEAD_TIME_CLR;
+        // end
+
+
+        S_LATCH_CLR : begin
+            latch <= 0;
+            next_line_begin <= 1'b1;
+            state <= S_UNBLANK;
+        end
+
+        S_UNBLANK : begin
+            blank <= 0;
+            next_line_begin <= 1'b0;
+            state <= S_DATA_SHIFT;
+        end
+    endcase
+end
+
+// Dead time counter increment
+always @(posedge clk_25MHz)
+    begin
+    if (state == S_DEAD_TIME_CLR || state == S_DEAD_TIME_SET)
+    begin
+        if (dead_time_counter != 200) // Check if counter has reached maximum value
+        dead_time_counter <= dead_time_counter + 1;
     end
+end
+
 endmodule

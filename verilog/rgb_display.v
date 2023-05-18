@@ -1,4 +1,8 @@
 `include "led_matrix_control.v"
+`include "FD25MHz.v"
+`include "line_render.v"
+`include "PLL25.v"
+
 module rgb_display #(
     parameter WIDTH = 96,
     parameter HEIGHT = 48,
@@ -25,59 +29,81 @@ module rgb_display #(
 reg [1:0] o_data_r;
 reg [1:0] o_data_g;
 reg [1:0] o_data_b;
+reg [5:0] rgb;
 
 // Memory
-reg [11:0] addr_b;
-reg [23: 0] data_in_b;
-reg [23: 0] data_out_b, data_out_a;  
-wire we_rgb = 0;
-wire re_rgb;
+// reg [11:0] addr_b;
+// reg [23: 0] data_in_b;
+// reg [23: 0] data_out_b, data_out_a;  
+// wire we_rgb = 0;
+// wire re_rgb;
 
-reg [1:0] count;
-reg clk_25MHz;
+reg clk_25MHz, rgb_en;
 
-always @(posedge i_clk) begin
-    count <= count + 1;
-    if (count == 2) begin
-        count <= 0;
-        clk_25MHz <= ~clk_25MHz;
-    end
-end
+wire next_line_begin;
+wire next_line_done;
+reg [4:0] next_line_addr;
+reg [6:0] next_line_pwm;
 
-dual_port_memory #(
-    .WIDTH(WIDTH), 
-    .HEIGHT(HEIGHT), 
-    .BPP(BPP), 
-    .CHAINED(CHAINED)
-    ) 
-dual_mem(
-    .rst(i_rst), 
-    .clk(i_clk), 
-    .addr_a(addr_a), .addr_b(addr_b), 
-    .dat_in_a(data_in_a), .dat_in_b(data_in_b),
-    .dat_out_a(data_out_a), .dat_out_b(data_out_b),
-    .we_a(wr_en), .we_b(we_rgb), 
-    .re_a(rd_en), .re_b(re_rgb)
-    );
+FD25MHz #()
+freq_div(
+    .i_clk(i_clk),
+    .o_clk(clk_25MHz)
+);
+
+// PLL25 #()
+// pll25MHz(
+//     .clk_in(i_clk),
+//     .clk_out(clk_25MHz),
+// );
 
 led_matrix_control #()
 matrix_cntrl(
-    .i_clk(clk_25MHz),
-    .i_rst(i_rst),
-    .o_ram_addr(addr_b),
-    .i_ram_b1_data(data_out_b[23:12]),
-    .i_ram_b2_data(data_out_b[11:0]),
-    .o_ram_read_stb(re_rgb),
-    .o_data_clock(sclk),
-    .o_data_latch(lat),
-    .o_data_blank(oe),
-    .o_data_r(o_data_r),
-    .o_data_b(o_data_b),
-    .o_data_g(o_data_g),
-    .o_row_select(o_row_select)
-    );
+    .clk_25MHz(clk_25MHz),
+    .row_addr(o_row_select),
+    .blank(oe),
+    .latch(lat),
+    .next_line_begin(next_line_begin),
+    .next_line_done(next_line_done),
+    .next_line_addr(next_line_addr),
+    .next_line_pwm(next_line_pwm),
+);
+
+line_render #()
+line_rndr(
+    .clk_25MHz(clk_25MHz),
+    .begin_in(next_line_begin),
+    .done_out(next_line_done),
+    .addr(next_line_addr),
+    .pwm(next_line_pwm),
+    .rgb_en(rgb_en),
+    .rgb(rgb)
+);
+
+// dual_port_memory #(
+//     .WIDTH(WIDTH), 
+//     .HEIGHT(HEIGHT), 
+//     .BPP(BPP), 
+//     .CHAINED(CHAINED)
+//     ) 
+// dual_mem(
+//     .rst(i_rst), 
+//     .clk(i_clk), 
+//     .addr_a(addr_a), .addr_b(addr_b), 
+//     .dat_in_a(data_in_a), .dat_in_b(data_in_b),
+//     .dat_out_a(data_out_a), .dat_out_b(data_out_b),
+//     .we_a(wr_en), .we_b(we_rgb), 
+//     .re_a(rd_en), .re_b(re_rgb)
+//     );
+
+assign sclk = rgb_en;
 
 // Wire RGB0-RGB1
+
+assign o_data_r = {rgb[3], rgb[0]};
+assign o_data_g = {rgb[4], rgb[1]};
+assign o_data_b = {rgb[5], rgb[2]};
+
 assign r0 = o_data_r[0];
 assign g0 = o_data_g[0];
 assign b0 = o_data_b[0];
