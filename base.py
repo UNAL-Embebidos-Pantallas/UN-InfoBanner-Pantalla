@@ -175,21 +175,21 @@ class BaseSoC(SoCCore):
                                                          platform.request("oe"),
                                                          row
                                                 )
-        # # Analyze signal of RGBMatrix
-        # self.signal_oe = self.rgb_cntrl.oe
-        # self.signal_lat = self.rgb_cntrl.lat
-        # self.signal_sclk = self.rgb_cntrl.sclk
-        # self.signal_r0 = self.rgb_cntrl.r0
-        # self.signal_r1 = self.rgb_cntrl.r1
-        # self.signal_g0 = self.rgb_cntrl.g0
-        # self.signal_g1 = self.rgb_cntrl.g1
-        # self.signal_b0 = self.rgb_cntrl.b0
-        # self.signal_b1 = self.rgb_cntrl.b1
-        # # LiteScope Analyzer -----------------------------------------------------------------------
+        # Analyze signal of RGBMatrix
+        self.signal_oe = self.rgb_cntrl.oe
+        self.signal_lat = self.rgb_cntrl.lat
+        self.signal_sclk = self.rgb_cntrl.sclk
+        self.signal_r0 = self.rgb_cntrl.r0
+        self.signal_r1 = self.rgb_cntrl.r1
+        self.signal_g0 = self.rgb_cntrl.g0
+        self.signal_g1 = self.rgb_cntrl.g1
+        self.signal_b0 = self.rgb_cntrl.b0
+        self.signal_b1 = self.rgb_cntrl.b1
+        # LiteScope Analyzer -----------------------------------------------------------------------
         # count = Signal(8)
         # self.sync += count.eq(count + 1)
-        # analyzer_signals = [
-        #   # IBus (could also just added as self.cpu.ibus)
+        analyzer_signals = [
+          # IBus (could also just added as self.cpu.ibus)
         #   self.cpu.ibus.stb,
         #   self.cpu.ibus.cyc,
         #   self.cpu.ibus.adr,
@@ -198,17 +198,17 @@ class BaseSoC(SoCCore):
         #   self.cpu.ibus.sel,
         #   self.cpu.ibus.dat_w,
         #   self.cpu.ibus.dat_r,
-        #   self.signal_oe,
-        #   self.signal_lat,
-        #   self.signal_sclk,
-        # #   self.signal_r0,
-        # #   self.signal_r1,
-        # #   self.signal_g0,
-        # #   self.signal_g1,
-        # #   self.signal_b0,
-        # #   self.signal_b1,
+          self.signal_oe,
+          self.signal_lat,
+          self.signal_sclk,
+          self.signal_r0,
+          self.signal_r1,
+          self.signal_g0,
+          self.signal_g1,
+          self.signal_b0,
+          self.signal_b1,
     
-        #   # DBus (could also just added as self.cpu.dbus)
+          # DBus (could also just added as self.cpu.dbus)
         #   self.cpu.dbus.stb,
         #   self.cpu.dbus.cyc,
         #   self.cpu.dbus.adr,
@@ -217,14 +217,14 @@ class BaseSoC(SoCCore):
         #   self.cpu.dbus.sel,
         #   self.cpu.dbus.dat_w,
         #   self.cpu.dbus.dat_r,
-        # ]
-        # self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
-        #     depth        = 1024,
-        #     clock_domain = "sys",
-        #     samplerate   = sys_clk_freq,
-        #     csr_csv      = "analyzer.csv")
-        # self.add_csr("analyzer")
-        # self.add_uartbone(name="serial_debug", baudrate=115200)
+        ]
+        self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
+            depth        = 1024,
+            clock_domain = "sys",
+            samplerate   = sys_clk_freq,
+            csr_csv      = "analyzer.csv")
+        self.add_csr("analyzer")
+        self.add_uartbone(name="serial_debug", baudrate=115200)
 # Build -----------------------------------------------------------------------
 soc = BaseSoC()
 builder = Builder(soc, output_dir="build", csr_csv="csr.csv", csr_svd="csr.svd", csr_json="csr.json")

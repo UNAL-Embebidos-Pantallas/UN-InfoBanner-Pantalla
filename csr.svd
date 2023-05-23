@@ -3,7 +3,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
     <vendor>litex</vendor>
     <name>SOC</name>
-    <description><![CDATA[Litex SoC 2023-05-14 16:56:41]]></description>
+    <description><![CDATA[Litex SoC 2023-05-23 13:05:11]]></description>
 
     <addressUnitBits>8</addressUnitBits>
     <width>32</width>
@@ -133,8 +133,216 @@ register to disable individual events.]]></description>
             </addressBlock>
         </peripheral>
         <peripheral>
-            <name>CTRL</name>
+            <name>ANALYZER</name>
             <baseAddress>0xF0000800</baseAddress>
+            <groupName>ANALYZER</groupName>
+            <registers>
+                <register>
+                    <name>MUX_VALUE</name>
+                    <addressOffset>0x0000</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>mux_value</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_ENABLE</name>
+                    <addressOffset>0x0004</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_enable</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_DONE</name>
+                    <addressOffset>0x0008</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_done</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_MEM_WRITE</name>
+                    <addressOffset>0x000c</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_mem_write</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_MEM_MASK</name>
+                    <addressOffset>0x0010</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_mem_mask</name>
+                            <msb>8</msb>
+                            <bitRange>[8:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_MEM_VALUE</name>
+                    <addressOffset>0x0014</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_mem_value</name>
+                            <msb>8</msb>
+                            <bitRange>[8:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>TRIGGER_MEM_FULL</name>
+                    <addressOffset>0x0018</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>trigger_mem_full</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>SUBSAMPLER_VALUE</name>
+                    <addressOffset>0x001c</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>subsampler_value</name>
+                            <msb>15</msb>
+                            <bitRange>[15:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_ENABLE</name>
+                    <addressOffset>0x0020</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_enable</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_DONE</name>
+                    <addressOffset>0x0024</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_done</name>
+                            <msb>0</msb>
+                            <bitRange>[0:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_LENGTH</name>
+                    <addressOffset>0x0028</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_length</name>
+                            <msb>10</msb>
+                            <bitRange>[10:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_OFFSET</name>
+                    <addressOffset>0x002c</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_offset</name>
+                            <msb>10</msb>
+                            <bitRange>[10:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_MEM_LEVEL</name>
+                    <addressOffset>0x0030</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_mem_level</name>
+                            <msb>10</msb>
+                            <bitRange>[10:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+                <register>
+                    <name>STORAGE_MEM_DATA</name>
+                    <addressOffset>0x0034</addressOffset>
+                    <resetValue>0x00</resetValue>
+                    <size>32</size>
+                    <fields>
+                        <field>
+                            <name>storage_mem_data</name>
+                            <msb>8</msb>
+                            <bitRange>[8:0]</bitRange>
+                            <lsb>0</lsb>
+                        </field>
+                    </fields>
+                </register>
+            </registers>
+            <addressBlock>
+                <offset>0</offset>
+                <size>0x38</size>
+                <usage>registers</usage>
+            </addressBlock>
+        </peripheral>
+        <peripheral>
+            <name>CTRL</name>
+            <baseAddress>0xF0001000</baseAddress>
             <groupName>CTRL</groupName>
             <registers>
                 <register>
@@ -200,7 +408,7 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
         </peripheral>
         <peripheral>
             <name>IDENTIFIER_MEM</name>
-            <baseAddress>0xF0001000</baseAddress>
+            <baseAddress>0xF0001800</baseAddress>
             <groupName>IDENTIFIER_MEM</groupName>
             <registers>
                 <register>
@@ -227,7 +435,7 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
         </peripheral>
         <peripheral>
             <name>SDRAM</name>
-            <baseAddress>0xF0001800</baseAddress>
+            <baseAddress>0xF0002000</baseAddress>
             <groupName>SDRAM</groupName>
             <registers>
                 <register>
@@ -401,7 +609,7 @@ to the Wishbone/CSR bus are working correctly. The initial reset value of
         </peripheral>
         <peripheral>
             <name>TIMER0</name>
-            <baseAddress>0xF0002000</baseAddress>
+            <baseAddress>0xF0002800</baseAddress>
             <groupName>TIMER0</groupName>
             <registers>
                 <register>
@@ -593,7 +801,7 @@ register to disable individual events.]]></description>
         </peripheral>
         <peripheral>
             <name>UART</name>
-            <baseAddress>0xF0002800</baseAddress>
+            <baseAddress>0xF0003000</baseAddress>
             <groupName>UART</groupName>
             <registers>
                 <register>
