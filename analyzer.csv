@@ -1,4 +1,4 @@
-config,None,data_width,38
+config,None,data_width,10
 config,None,depth,1024
 config,None,samplerate,100000000
 signal,0,basesoc_ibus_stb,1
@@ -11,17 +11,3 @@ signal,0,g0,1
 signal,0,g1,1
 signal,0,b0,1
 signal,0,b1,1
-signal,0,ethphy_sink_valid,1
-signal,0,ethphy_sink_ready,1
-signal,0,ethphy_sink_first,1
-signal,0,ethphy_sink_last,1
-signal,0,ethphy_sink_payload_data,8
-signal,0,ethphy_sink_payload_last_be,1
-signal,0,ethphy_sink_payload_error,1
-signal,0,ethphy_source_valid,1
-signal,0,ethphy_source_ready,1
-signal,0,ethphy_source_first,1
-signal,0,ethphy_source_last,1
-signal,0,ethphy_source_payload_data,8
-signal,0,ethphy_source_payload_last_be,1
-signal,0,ethphy_source_payload_error,1

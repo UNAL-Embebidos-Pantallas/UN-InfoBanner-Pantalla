@@ -144,11 +144,11 @@ class BaseSoC(SoCCore):
             l2_cache_size = 8192,
         )
         # ETHERNET ---------------------------------------------------------------------------------
-        self.ethphy = LiteEthPHYRGMII(
-          clock_pads = self.platform.request("eth_clocks", 0),
-          pads       = self.platform.request("eth", 0),
-          tx_delay = 0)
-        self.add_ethernet(phy=self.ethphy)
+        # self.ethphy = LiteEthPHYRGMII(
+        #   clock_pads = self.platform.request("eth_clocks", 0),
+        #   pads       = self.platform.request("eth", 0),
+        #   tx_delay = 0)
+        # self.add_ethernet(phy=self.ethphy)
 
         # I2C --------------------------------------------------------------------------------------
         # self.i2c0 = I2CMaster(pads=platform.request("i2c"))
@@ -187,8 +187,8 @@ class BaseSoC(SoCCore):
         self.signal_b1 = self.rgb_cntrl.b1
 
         # Analyze signal of Ethernet
-        self.signal_tx_eth = self.ethphy.tx.sink
-        self.signal_rx_eth = self.ethphy.rx.source
+        # self.signal_tx_eth = self.ethphy.tx.sink
+        # self.signal_rx_eth = self.ethphy.rx.source
 
         # LiteScope Analyzer -----------------------------------------------------------------------
         analyzer_signals = [
@@ -212,8 +212,8 @@ class BaseSoC(SoCCore):
           self.signal_g1,
           self.signal_b0,
           self.signal_b1,
-          self.signal_tx_eth,
-          self.signal_rx_eth,
+        #   self.signal_tx_eth,
+        #   self.signal_rx_eth,
 
           # DBus (could also just added as self.cpu.dbus)
         #   self.cpu.dbus.stb,

@@ -26,14 +26,11 @@ parameter S_AFTER_FIRST_LINE_BEGIN = 1;
 parameter S_DATA_SHIFT = 2;
 parameter S_BLANK_SET = 3;
 parameter S_LATCH_SET = 4;
-parameter S_DEAD_TIME_SET = 5;
-parameter S_INCRE_ROW = 6;
-parameter S_LATCH_CLR = 7;
-parameter S_UNBLANK = 8;
-parameter S_DEAD_TIME_CLR = 9;
+parameter S_INCRE_ROW = 5;
+parameter S_LATCH_CLR = 6;
+parameter S_UNBLANK = 7;
 
-reg [31:0] dead_time_counter = 0; 
-reg [3:0] state = S_DEFAULT;
+reg [2:0] state = S_DEFAULT;
 
 always @(posedge clk_25MHz) begin
     case (state)
@@ -60,16 +57,6 @@ always @(posedge clk_25MHz) begin
             state <= S_LATCH_SET;
         end
 
-        //Dead time
-
-        // S_DEAD_TIME_SET : begin
-        //     if (dead_time_counter == 200) begin
-        //         state <= S_LATCH_SET;
-        //     end
-        //     else
-        //         state <= S_DEAD_TIME_SET;
-        // end
-
         S_LATCH_SET : begin
             latch <= 1;           
             state <= S_INCRE_ROW;
@@ -85,17 +72,6 @@ always @(posedge clk_25MHz) begin
             state <= S_LATCH_CLR;     
         end
 
-        //Dead time
-
-        // S_DEAD_TIME_CLR : begin
-        //     if (dead_time_counter == 25) begin
-        //         state <= S_LATCH_CLR;
-        //     end
-        //     else
-        //         state <= S_DEAD_TIME_CLR;
-        // end
-
-
         S_LATCH_CLR : begin
             latch <= 0;
             next_line_begin <= 1'b1;
@@ -109,15 +85,4 @@ always @(posedge clk_25MHz) begin
         end
     endcase
 end
-
-// Dead time counter increment
-always @(posedge clk_25MHz)
-    begin
-    if (state == S_DEAD_TIME_CLR || state == S_DEAD_TIME_SET)
-    begin
-        if (dead_time_counter != 200) // Check if counter has reached maximum value
-        dead_time_counter <= dead_time_counter + 1;
-    end
-end
-
 endmodule
