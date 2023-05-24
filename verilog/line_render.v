@@ -7,7 +7,7 @@ module line_render (
     output wire rgb_en,
     output wire [5:0] rgb,
 );
-    localparam px_per_row = 80;
+    localparam px_per_row = 96;
     reg [6:0] px_to_shift = 0;
     reg [5:0] rgb = 0;
     reg done_reg = 0;

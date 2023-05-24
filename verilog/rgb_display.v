@@ -31,11 +31,11 @@ reg [1:0] o_data_b;
 reg [5:0] rgb;
 
 // Memory
-// reg [11:0] addr_b;
-// reg [23: 0] data_in_b;
-// reg [23: 0] data_out_b, data_out_a;  
-// wire we_rgb = 0;
-// wire re_rgb;
+reg [11:0] addr_b;
+reg [23:0] data_in_b;
+reg [23:0] data_out_b, data_out_a;  
+wire we_rgb = 0;
+wire re_rgb;
 
 reg clk_25MHz, rgb_en;
 
@@ -73,21 +73,21 @@ line_rndr(
     .rgb(rgb)
 );
 
-// dual_port_memory #(
-//     .WIDTH(WIDTH), 
-//     .HEIGHT(HEIGHT), 
-//     .BPP(BPP), 
-//     .CHAINED(CHAINED)
-//     ) 
-// dual_mem(
-//     .rst(i_rst), 
-//     .clk(i_clk), 
-//     .addr_a(addr_a), .addr_b(addr_b), 
-//     .dat_in_a(data_in_a), .dat_in_b(data_in_b),
-//     .dat_out_a(data_out_a), .dat_out_b(data_out_b),
-//     .we_a(wr_en), .we_b(we_rgb), 
-//     .re_a(rd_en), .re_b(re_rgb)
-//     );
+dual_port_memory #(
+    .WIDTH(WIDTH), 
+    .HEIGHT(HEIGHT), 
+    .BPP(BPP), 
+    .CHAINED(CHAINED)
+    ) 
+dual_mem(
+    .rst(i_rst), 
+    .clk(i_clk), 
+    .addr_a(addr_a), .addr_b(addr_b), 
+    .dat_in_a(data_in_a), .dat_in_b(data_in_b),
+    .dat_out_a(data_out_a), .dat_out_b(data_out_b),
+    .we_a(wr_en), .we_b(we_rgb), 
+    .re_a(rd_en), .re_b(re_rgb)
+    );
 
 assign sclk = rgb_en;
 

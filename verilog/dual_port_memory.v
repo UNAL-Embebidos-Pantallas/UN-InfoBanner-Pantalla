@@ -7,7 +7,7 @@ module dual_port_memory #(
     input rst,
     input clk,
     input wire [11:0] addr_a, addr_b, 
-    input wire [23: 0] dat_in_a, dat_in_b, 
+    input wire [23:0] dat_in_a, dat_in_b, 
     input wire we_a, we_b,
     input wire re_a, re_b,   
     output reg [23:0] dat_out_a, dat_out_b 
