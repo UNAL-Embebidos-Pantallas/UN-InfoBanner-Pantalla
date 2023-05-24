@@ -1,7 +1,6 @@
 `include "led_matrix_control.v"
 `include "FD25MHz.v"
 `include "line_render.v"
-`include "PLL25.v"
 
 module rgb_display #(
     parameter WIDTH = 96,
@@ -50,12 +49,6 @@ freq_div(
     .i_clk(i_clk),
     .o_clk(clk_25MHz)
 );
-
-// PLL25 #()
-// pll25MHz(
-//     .clk_in(i_clk),
-//     .clk_out(clk_25MHz),
-// );
 
 led_matrix_control #()
 matrix_cntrl(

@@ -30,19 +30,19 @@ parameter S_INCRE_ROW = 5;
 parameter S_LATCH_CLR = 6;
 parameter S_UNBLANK = 7;
 
-reg [2:0] state = S_DATA_SHIFT;
+reg [2:0] state = S_DEFAULT;
 
 always @(posedge clk_25MHz) begin
     case (state)
-        // S_DEFAULT : begin
-        //     state <= S_AFTER_FIRST_LINE_BEGIN;
-        //     next_line_begin <=1'b1;
-        // end
+        S_DEFAULT : begin
+            next_line_begin <= 1;
+            state <= S_AFTER_FIRST_LINE_BEGIN;
+        end
 
-        // S_AFTER_FIRST_LINE_BEGIN : begin
-        //     next_line_begin <= 1'b0;
-        //     state <= S_DATA_SHIFT;
-        // end
+        S_AFTER_FIRST_LINE_BEGIN : begin
+            next_line_begin <= 0;
+            state <= S_DATA_SHIFT;
+        end
 
         // Main loop
 
@@ -63,7 +63,7 @@ always @(posedge clk_25MHz) begin
         end
 
         S_INCRE_ROW : begin
-            if(row_counter == 23)begin
+            if(row_counter == 19)begin
                 row_counter <= 0;
             end
             else begin
