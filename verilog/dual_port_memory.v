@@ -13,7 +13,7 @@ module dual_port_memory #(
     output reg [23:0] dat_out_a, dat_out_b 
 );
 
-// Dual port RAM with 2304x32 bits resolution
+// Dual port RAM with 2304x24 bits resolution
 reg [23:0] mem [0:(CHAINED*WIDTH*HEIGHT)/2-1];
 
 initial begin

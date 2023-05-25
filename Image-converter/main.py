@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 
 # Load image
-img = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/images.png')
+img = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/landscape.jpg')
 
 # Resize image to 96x48
 img = img.resize((96, 48))
@@ -19,7 +19,7 @@ img_array = np.array(img)
 img_out = Image.fromarray(img_array)
 
 # Save image as .bmp
-img_out.save('Image-converter/output.bmp')
+img_out.save('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/output.bmp')
 
 # Scale RGB values to 4 bits (range 0-15)
 img_array_444 = np.round(img_array * 15/255).astype(np.uint8)

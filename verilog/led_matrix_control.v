@@ -7,14 +7,15 @@ module led_matrix_control
     output wire next_line_begin,
     input wire next_line_done,
     output wire [4:0] next_line_addr,
-    output wire [6:0] next_line_pwm,
+    output wire [3:0] next_line_pwm,
+    output wire ram_en,
 );
 
 reg blank = 1'b1;
 reg latch = 1'b0;
 
 reg [4:0] row_counter;
-reg [6:0] pwm_counter;
+reg [2:0] pwm_counter = 0;
 assign row_addr = row_counter;
 assign next_line_pwm = pwm_counter;
 assign next_line_addr = row_addr;
@@ -47,12 +48,14 @@ always @(posedge clk_25MHz) begin
         // Main loop
 
         S_DATA_SHIFT : begin
+            ram_en <= 1;
             if (next_line_done)begin
                 state <= S_BLANK_SET;
             end   
         end
 
         S_BLANK_SET : begin
+            ram_en <= 0;
             blank <= 1;
             state <= S_LATCH_SET;
         end
@@ -63,7 +66,7 @@ always @(posedge clk_25MHz) begin
         end
 
         S_INCRE_ROW : begin
-            if(row_counter == 19)begin
+            if(row_counter == 23)begin
                 row_counter <= 0;
             end
             else begin
@@ -81,6 +84,13 @@ always @(posedge clk_25MHz) begin
         S_UNBLANK : begin
             blank <= 0;
             next_line_begin <= 0;
+            if (row_counter == 0) begin
+                if (pwm_counter == 8)
+                        // If we hit the lsb, wrap to the msb
+                    pwm_counter <= 1;
+                else
+                    pwm_counter <= pwm_counter + 1;
+            end
             state <= S_DATA_SHIFT;
         end
     endcase

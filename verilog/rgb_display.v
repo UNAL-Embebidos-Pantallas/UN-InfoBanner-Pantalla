@@ -60,6 +60,8 @@ matrix_cntrl(
     .next_line_done(next_line_done),
     .next_line_addr(next_line_addr),
     .next_line_pwm(next_line_pwm),
+    .ram_en(re_rgb)
+
 );
 
 line_render #()
@@ -70,7 +72,9 @@ line_rndr(
     .addr(next_line_addr),
     .pwm(next_line_pwm),
     .rgb_en(rgb_en),
-    .rgb(rgb)
+    .rgb(rgb),
+    .buf_data(data_out_b),
+    .buf_addr(addr_b)
 );
 
 dual_port_memory #(
@@ -81,7 +85,7 @@ dual_port_memory #(
     ) 
 dual_mem(
     .rst(i_rst), 
-    .clk(i_clk), 
+    .clk(clk_25MHz), 
     .addr_a(addr_a), .addr_b(addr_b), 
     .dat_in_a(data_in_a), .dat_in_b(data_in_b),
     .dat_out_a(data_out_a), .dat_out_b(data_out_b),
@@ -97,11 +101,11 @@ assign o_data_r = {rgb[3], rgb[0]};
 assign o_data_g = {rgb[4], rgb[1]};
 assign o_data_b = {rgb[5], rgb[2]};
 
-assign r0 = o_data_r[0];
-assign g0 = o_data_g[0];
-assign b0 = o_data_b[0];
-assign r1 = o_data_r[1];
-assign g1 = o_data_g[1];
-assign b1 = o_data_b[1];
+assign r0 = o_data_r[1];
+assign g0 = o_data_g[1];
+assign b0 = o_data_b[1];
+assign r1 = o_data_r[0];
+assign g1 = o_data_g[0];
+assign b1 = o_data_b[0];
 
 endmodule
