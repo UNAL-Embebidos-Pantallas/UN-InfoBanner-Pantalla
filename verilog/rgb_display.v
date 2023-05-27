@@ -51,8 +51,6 @@ freq_div(
     .o_clk(clk_25MHz)
 );
 
-ram Ram(.i_clk(clk_25MHz),.o_valor(data_out_b),.request(re_rgb),.addrRead(addr_b));
-
 led_matrix_control #()
 matrix_cntrl(
     .clk_25MHz(clk_25MHz),

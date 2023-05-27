@@ -112,7 +112,6 @@ class BaseSoC(SoCCore):
         }
         platform = colorlight_i5.Platform()
         platform.add_source("./verilog/rgb_display.v")
-        platform.add_source("./verilog/dual_port_memory.v")
         sys_clk_freq = int(100e6)
         platform.add_extension(_serial)
         platform.add_extension(_leds)
