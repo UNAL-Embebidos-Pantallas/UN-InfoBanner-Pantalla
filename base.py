@@ -185,12 +185,15 @@ class BaseSoC(SoCCore):
         self.signal_g1 = self.rgb_cntrl.g1
         self.signal_b0 = self.rgb_cntrl.b0
         self.signal_b1 = self.rgb_cntrl.b1
+
+        # Analyze signal of Ethernet
+        # self.signal_tx_eth = self.ethphy.tx.sink
+        # self.signal_rx_eth = self.ethphy.rx.source
+
         # LiteScope Analyzer -----------------------------------------------------------------------
-        # count = Signal(8)
-        # self.sync += count.eq(count + 1)
         analyzer_signals = [
           # IBus (could also just added as self.cpu.ibus)
-        #   self.cpu.ibus.stb,
+          self.cpu.ibus.stb,
         #   self.cpu.ibus.cyc,
         #   self.cpu.ibus.adr,
         #   self.cpu.ibus.we,
@@ -198,6 +201,8 @@ class BaseSoC(SoCCore):
         #   self.cpu.ibus.sel,
         #   self.cpu.ibus.dat_w,
         #   self.cpu.ibus.dat_r,
+          
+          # RGB Driver
           self.signal_oe,
           self.signal_lat,
           self.signal_sclk,
@@ -207,7 +212,9 @@ class BaseSoC(SoCCore):
           self.signal_g1,
           self.signal_b0,
           self.signal_b1,
-    
+        #   self.signal_tx_eth,
+        #   self.signal_rx_eth,
+
           # DBus (could also just added as self.cpu.dbus)
         #   self.cpu.dbus.stb,
         #   self.cpu.dbus.cyc,

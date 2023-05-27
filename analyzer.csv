@@ -1,6 +1,7 @@
-config,None,data_width,9
+config,None,data_width,10
 config,None,depth,1024
 config,None,samplerate,100000000
+signal,0,basesoc_ibus_stb,1
 signal,0,oe,1
 signal,0,lat,1
 signal,0,sclk,1
