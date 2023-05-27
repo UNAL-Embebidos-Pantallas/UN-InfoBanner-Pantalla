@@ -1,6 +1,7 @@
 `include "led_matrix_control.v"
 `include "FD25MHz.v"
 `include "line_render.v"
+`include "dual_port_ram.v"
 
 module rgb_display #(
     parameter WIDTH = 96,
@@ -77,24 +78,24 @@ line_rndr(
     .buf_addr(addr_b)
 );
 
-dual_port_memory #()
-dual_mem(
-    .rst(i_rst), 
-    .clk(clk_25MHz), 
-    .addr_a(addr_a), .addr_b(addr_b), 
-    .dat_in_a(data_in_a), .dat_in_b(data_in_b),
-    .dat_out_a(data_out_a), .dat_out_b(data_out_b),
-    .we_a(wr_en), .we_b(we_rgb), 
-    .re_a(rd_en), .re_b(re_rgb)
-    );
+dual_port_ram dual_ram(
+    .clk_a(i_clk),
+    .data_in_a(data_in_a),
+    .we_a(we_rgb),
+    .addr_a(addr_a),
+    .clk_b(clk_25MHz),
+    .data_out_b(data_out_b),
+    .re_b(re_rgb),
+    .addr_b(addr_b)
+);
 
 assign sclk = rgb_en;
 
 // Wire RGB0-RGB1
 
-assign o_data_r = {rgb[3], rgb[0]};
+assign o_data_r = {rgb[5], rgb[2]};
 assign o_data_g = {rgb[4], rgb[1]};
-assign o_data_b = {rgb[5], rgb[2]};
+assign o_data_b = {rgb[3], rgb[0]};
 
 assign r0 = o_data_r[1];
 assign g0 = o_data_g[1];

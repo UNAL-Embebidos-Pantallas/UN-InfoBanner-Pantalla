@@ -1,7 +1,7 @@
 from PIL import Image
 
 # Abrir la imagen y redimensionarla a 96x48 píxeles
-image = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/images.png')  # Cambia 'ruta_de_tu_imagen.jpg' por la ruta de tu imagen
+image = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/Jose.jpeg')  # Cambia 'ruta_de_tu_imagen.jpg' por la ruta de tu imagen
 image = image.resize((96, 48))
 
 # Convertir la imagen a modo RGB
