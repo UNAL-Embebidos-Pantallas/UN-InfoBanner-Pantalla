@@ -1,9 +1,4 @@
-module dual_port_memory #(
-    parameter WIDTH = 96,
-    parameter HEIGHT = 48,
-    parameter BPP = 12, // Bits per pixel
-    parameter CHAINED = 1 // Number of panels in chain
-) (
+module dual_port_memory #()(
     input rst,
     input clk,
     input wire [11:0] addr_a, addr_b, 
@@ -14,7 +9,7 @@ module dual_port_memory #(
 );
 
 // Dual port RAM with 2304x24 bits resolution
-reg [23:0] mem [0:(CHAINED*WIDTH*HEIGHT)/2-1];
+reg [23:0] mem [2304:0];
 
 initial begin
     $readmemh("image.mem", mem);

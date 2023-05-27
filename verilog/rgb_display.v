@@ -77,12 +77,7 @@ line_rndr(
     .buf_addr(addr_b)
 );
 
-dual_port_memory #(
-    .WIDTH(WIDTH), 
-    .HEIGHT(HEIGHT), 
-    .BPP(BPP), 
-    .CHAINED(CHAINED)
-    ) 
+dual_port_memory #()
 dual_mem(
     .rst(i_rst), 
     .clk(clk_25MHz), 

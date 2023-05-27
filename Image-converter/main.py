@@ -1,41 +1,34 @@
 from PIL import Image
-import numpy as np
 
-# Load image
-img = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/landscape.jpg')
+# Abrir la imagen y redimensionarla a 96x48 píxeles
+image = Image.open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/images.png')  # Cambia 'ruta_de_tu_imagen.jpg' por la ruta de tu imagen
+image = image.resize((96, 48))
 
-# Resize image to 96x48
-img = img.resize((96, 48))
-rows = int(48/2)
-cols = 96
+# Convertir la imagen a modo RGB
+image = image.convert('RGB')
 
-# Convert to RGB mode
-img = img.convert("RGB")
+# Obtener los datos de la imagen en formato RGB444 binario
+pixel_data = []
+for y in range(48):
+    for x in range(96):
+        r, g, b = image.getpixel((x, y))
+        r = (r >> 4) & 0b1111  # Obtener los 4 bits más significativos de cada componente de color
+        g = (g >> 4) & 0b1111
+        b = (b >> 4) & 0b1111
+        rgb444 = (r << 8) | (g << 4) | b  # Combinar los componentes en un solo valor RGB444
+        pixel_data.append(rgb444)
 
-# Convert to numpy array
-img_array = np.array(img)
+# Reorganizar los datos de los píxeles
+reordered_data = []
+for i in range(0, 2304, 1):
+    pixel1 = pixel_data[i]  # Los 12 bits más significativos
+    pixel2 = pixel_data[i + 2304]  # Los 12 bits menos significativos
+    reordered_data.append((pixel1 << 12) | pixel2)
 
-# Create Image object from numpy array
-img_out = Image.fromarray(img_array)
+# Convertir los datos reordenados a formato binario
+binary_data = [bin(pixel)[2:].zfill(24) for pixel in reordered_data]
 
-# Save image as .bmp
-img_out.save('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/Image-converter/output.bmp')
-
-# Scale RGB values to 4 bits (range 0-15)
-img_array_444 = np.round(img_array * 15/255).astype(np.uint8)
-
-# Create text file
-with open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/verilog/image.mem', 'w') as f:
-    # Iterate over each row and column of the image
-    for idx in range(rows):
-        for px_idx in range(cols):
-            # Scale R, G, B values to 4 bits and convert to binary format
-            r_bin = bin(img_array_444[idx][px_idx][0])[2:].zfill(4)
-            g_bin = bin(img_array_444[idx][px_idx][1])[2:].zfill(4)
-            b_bin = bin(img_array_444[idx][px_idx][2])[2:].zfill(4)
-            r2_bin = bin(img_array_444[idx+rows][px_idx][0])[2:].zfill(4)
-            g2_bin = bin(img_array_444[idx+rows][px_idx][1])[2:].zfill(4)
-            b2_bin = bin(img_array_444[idx+rows][px_idx][2])[2:].zfill(4)
-
-            # Write R, G, B values to a line concatenated with a space
-            f.write(f"{r_bin}{g_bin}{b_bin}{r2_bin}{g2_bin}{b2_bin}\n")
+# Crear un archivo de texto para guardar el vector de píxeles reordenado en formato binario
+with open('/home/xhapa/Documents/EMBEDDED/Zephyr_Litex/verilog/image.mem', 'w') as file:
+    for pixel in binary_data:
+        file.write(pixel + '\n')

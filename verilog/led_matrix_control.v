@@ -15,7 +15,7 @@ reg blank = 1'b1;
 reg latch = 1'b0;
 
 reg [4:0] row_counter;
-reg [2:0] pwm_counter = 0;
+reg [3:0] pwm_counter = 0;
 assign row_addr = row_counter;
 assign next_line_pwm = pwm_counter;
 assign next_line_addr = row_addr;
@@ -85,9 +85,9 @@ always @(posedge clk_25MHz) begin
             blank <= 0;
             next_line_begin <= 0;
             if (row_counter == 0) begin
-                if (pwm_counter == 8)
+                if (pwm_counter == 15)
                         // If we hit the lsb, wrap to the msb
-                    pwm_counter <= 1;
+                    pwm_counter <= 0;
                 else
                     pwm_counter <= pwm_counter + 1;
             end
