@@ -1,4 +1,5 @@
 `include "led_matrix_control.v"
+`include "ram.v"
 module rgb_display #(
     parameter WIDTH = 96,
     parameter HEIGHT = 48,
@@ -44,30 +45,31 @@ always @(posedge i_clk) begin
     end
 end
 
-dual_port_memory #(
-    .WIDTH(WIDTH), 
-    .HEIGHT(HEIGHT), 
-    .BPP(BPP), 
-    .CHAINED(CHAINED)
-    ) 
-dual_mem(
-    .rst(i_rst), 
-    .clk(i_clk), 
-    .addr_a(addr_a), .addr_b(addr_b), 
-    .dat_in_a(data_in_a), .dat_in_b(data_in_b),
-    .dat_out_a(data_out_a), .dat_out_b(data_out_b),
-    .we_a(wr_en), .we_b(we_rgb), 
-    .re_a(rd_en), .re_b(re_rgb)
-    );
+// dual_port_memory #(
+//     .WIDTH(WIDTH), 
+//     .HEIGHT(HEIGHT), 
+//     .BPP(BPP), 
+//     .CHAINED(CHAINED)
+//     ) 
+// dual_mem(
+//     .rst(i_rst), 
+//     .clk(i_clk), 
+//     .addr_a(addr_a), .addr_b(addr_b), 
+//     .dat_in_a(data_in_a), .dat_in_b(data_in_b),
+//     .dat_out_a(data_out_a), .dat_out_b(data_out_b),
+//     .we_a(wr_en), .we_b(we_rgb), 
+//     .re_a(rd_en), .re_b(re_rgb)
+//     );
+
+ram Ram(.i_clk(clk_25MHz),.o_valor(data_out_b),.request(re_rgb),.addrRead(addr_b));
 
 led_matrix_control #()
 matrix_cntrl(
     .i_clk(clk_25MHz),
     .i_rst(i_rst),
-    // .o_ram_addr(addr_b),
-    // .i_ram_b1_data(data_out_b[23:12]),
-    // .i_ram_b2_data(data_out_b[11:0]),
-    // .o_ram_read_stb(re_rgb),
+    .o_ram_addr(addr_b),
+    .i_ram_data(data_out_b),
+    .o_ram_read_stb(re_rgb),
     .o_data_clock(sclk),
     .o_data_latch(lat),
     .o_data_blank(oe),

@@ -7,6 +7,9 @@ module led_matrix_control
     // // Blink buttom
     // input enable,
     // Shift register controls for the column data
+    output reg [11:0] o_ram_addr,
+    input wire[23:0] i_ram_data,
+    output reg o_ram_read_stb,
     output reg o_data_clock,
     output reg o_data_latch,
     output reg o_data_blank,
@@ -17,11 +20,13 @@ module led_matrix_control
     // Inputs to the row select demux
     output reg [4:0] o_row_select,
 );
-    wire [35:0] data;
-    // reg enable_ram;
-    // reg [11:0]addrRead;
+    wire [23:0] data;
+    reg enable_ram;
+    reg [11:0]addrRead;
+    assign o_ram_addr = addrRead;
+    assign i_ram_data = data;
+    assign o_ram_read_stb = enable_ram;
     
-    //ram Ram(.i_clk(i_clk),.o_valor(data),.request(enable_ram),.addrRead(addrRead));
    /* Decoder_3to7 decodeR0(.input_data(data[35:33]),.output_data(red_register));
     Decoder_3to7 decodeG0(.input_data(data[32:30]),.output_data(green_register));
     Decoder_3to7 decodeB0(.input_data(data[29:27]),.output_data(blue_register));*/
@@ -122,15 +127,15 @@ module led_matrix_control
                 time_periods_remaining <= time_periods_remaining - 1;
             end*/
             // 
-            // enable_ram=1;
-            // addrRead=pixels_to_shift+96*o_row_select;
-            dataPixelR={pixels_to_shift[0],pixels_to_shift[0],pixels_to_shift[0]};
-            dataPixelG={pixels_to_shift[1],pixels_to_shift[1],pixels_to_shift[1]};
-            dataPixelB={pixels_to_shift[2],pixels_to_shift[2],pixels_to_shift[2]};
+            enable_ram=1;
+            addrRead=pixels_to_shift+96*o_row_select;
+            dataPixelR=data[23:20];
+            dataPixelG=data[19:16];
+            dataPixelB=data[15:12];
 
-            dataPixelR2={pixels_to_shift[3],pixels_to_shift[3],pixels_to_shift[3]};
-            dataPixelG2={pixels_to_shift[4],pixels_to_shift[4],pixels_to_shift[4]};
-            dataPixelB2={pixels_to_shift[5],pixels_to_shift[5],pixels_to_shift[5]};
+            dataPixelR2=data[11:8];
+            dataPixelG2=data[7:4];
+            dataPixelB2=data[3:0];
             if (pixels_to_shift != pixels_per_row ) begin
                 
                 
@@ -180,7 +185,7 @@ module led_matrix_control
          // - Unblank the display.
          // Each step has been made it's own state for clarity; if one wanted
          // to save a little more on logic some of these steps can be merged.
-         s_blank_set: begin o_data_blank <= 1; state <= s_latch_set; end
+         s_blank_set: begin enable_ram = 0; o_data_blank <= 1; state <= s_latch_set; end
          s_latch_set: begin o_data_latch <= 1; state <= s_increment_row; end
          s_increment_row: begin 
             if(o_row_select==23)begin
