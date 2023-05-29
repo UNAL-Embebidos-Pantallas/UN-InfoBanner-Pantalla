@@ -8,7 +8,7 @@ RTL_CPU_DIR  = ${LITEX_DIR}/pythondata-cpu-lm32/pythondata_cpu_lm32/verilog/rtl/
 ZEPHYR_DIR   = /home/xhapa/zephyrproject/
 LITEX_DIR    = /home/xhapa/Documents/EMBEDDED/Litex/
 WORK_DIR     = /home/xhapa/Documents/EMBEDDED/Zephyr_Litex/
-SERIAL       = /dev/ttyACM0
+SERIAL       = /dev/ttyACM1
 
 SERIAL?=/dev/ttyUSB0
 
@@ -28,7 +28,7 @@ all: gateware firmware
 gateware:
 	./base.py
 
-firmware: ${SOFT_DIR}/common.mak
+firmware: 
 	$(MAKE) -C firmware/ -f Makefile all
 
 overlay:
@@ -39,10 +39,10 @@ app_zephyr: overlay
 configure: app_zephyr
 	sudo openFPGALoader -b colorlight-i5 -m ${GATE_DIR}/${TARGET}.bit 
 
-load_zephyr_app: configure
+load_zephyr_app:
 	litex_term ${SERIAL} --kernel ${WORK_DIR}/build/zephyr/zephyr.bin
 	
-litex_term: firmware
+litex_term: configure
 	litex_term ${SERIAL} --kernel firmware/firmware.bin
 
 ${TARGET}.svg: 
