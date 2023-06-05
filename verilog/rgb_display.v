@@ -81,11 +81,15 @@ line_rndr(
 dual_port_ram dual_ram(
     .clk_a(i_clk),
     .data_in_a(data_in_a),
-    .we_a(we_rgb),
+    .we_a(wr_en),
+    .re_a(rd_en),
     .addr_a(addr_a),
+    .data_out_a(data_out_a),
     .clk_b(clk_25MHz),
     .data_out_b(data_out_b),
     .re_b(re_rgb),
+    .we_b(we_rgb),
+    .data_in_b(data_in_b),
     .addr_b(addr_b)
 );
 

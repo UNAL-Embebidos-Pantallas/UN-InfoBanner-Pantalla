@@ -72,11 +72,8 @@ static void help(void)
 	puts("Available commands:");
 	puts("help                            - this command");
 	puts("reboot                          - reboot CPU");
-	puts("led                             - led test");
-	puts("switch                          - switch test");
 	puts("display                         - display test");
-	puts("rgbled                          - rgb led test");
-	puts("infra                             - infra test");
+	puts("matrix                          - matrix rgb test");
 }
 
 static void reboot(void)
@@ -117,11 +114,54 @@ static void vga_test(void)
 	}
 }
 */
+
+static void matrix_rgb_test(void)
+{
+	int x, y;
+	for(y=0; y<24; y++) {
+		for(x=0; x<96; x++) {
+			rgb_cntrl_wr_en_write(0);
+			rgb_cntrl_addr_a_write(y*96+x);
+			if(x<96/3)	
+				rgb_cntrl_rgb_indat_a_write(((int)(x/10)%2^(int)(y/10)%2)*15);
+			else if(x<2*96/3) 
+				rgb_cntrl_rgb_indat_a_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<4);
+			else 
+				rgb_cntrl_rgb_indat_a_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<8);
+			rgb_cntrl_wr_en_write(1);
+		}
+	}
+}
+
+static void matrix_move(void)
+{	
+	int posx = 15;
+	int posy = 0;
+	int delta = 2;
+	int x, y, addr;
+	while (posy != 96) {
+	for(y=0; y<24; y++) {
+		for(x=0; x<96; x++) {
+			rgb_cntrl_wr_en_write(0);
+			addr = y*96+x;
+			rgb_cntrl_addr_a_write(addr);
+			if (addr == posx*96+posy || addr == (posx+delta)*96+(posy+delta))
+				rgb_cntrl_rgb_indat_a_write(x*y);
+			else
+				rgb_cntrl_rgb_indat_a_write(0);
+			rgb_cntrl_wr_en_write(1);
+		}
+	}
+	posy++;
+	delay_ms(100);
+	}
+}
+
 static void console_service(void)
 {
 	char *str;
 	char *token;
-
+	int i=0;
 	str = readstr();
 	if(str == NULL) return;
 	token = get_token(&str);
@@ -139,9 +179,14 @@ static void console_service(void)
 	// 	rgbled_test();
 	// else if(strcmp(token, "infra") == 0)
 	// 	GPIO_infra_test();
-/*	else if(strcmp(token, "vga") == 0)
-		vga_test();
-*/
+	else if(strcmp(token, "matrix") == 0)
+		matrix_rgb_test();
+	else if(strcmp(token, "move") == 0)
+		while(i!=10){
+			matrix_move();
+			i++;
+		}
+		i = 0;
 	prompt();
 }
 
@@ -159,14 +204,6 @@ int main(void)
 
 	while(1) {
 		console_service();
-		// se le asigna dos les prendidos  y dos apagados al bus 
-  		// se lee el bus de sw 
-
-	/*	leds_out_write(15);
-		delay_ms(100);
-		leds_out_write(240);
-		delay_ms(100);
-		printf("El programa \n");*/
 	}
 
 	return 0;
