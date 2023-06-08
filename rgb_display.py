@@ -10,7 +10,7 @@ class RGBDisplay(Module, AutoCSR):
         self.rst = ResetSignal()
 
         self.addr_a = CSRStorage(12, name='addr_a')
-        self.rgb_indat_a = CSRStorage(24, name='rgb_indat_a')
+        self.rgb_indat_a = CSRStorage(12, name='rgb_indat_a')
         self.wr_en = CSRStorage(name='wr_en')
         self.rd_en = CSRStorage(name='rd_en')
 

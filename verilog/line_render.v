@@ -7,7 +7,7 @@ module line_render (
     output wire rgb_en,
     output wire [5:0] rgb,
     //Memory I/O
-    input wire [23:0]buf_data,
+    input wire [11:0]buf_data,
     output wire [11:0]buf_addr,
 );
     localparam px_per_row = 96;
@@ -40,12 +40,12 @@ module line_render (
         end
         else if (px_to_shift != px_per_row) begin
             buf_addr <= px_to_shift+96*addr;
-            r0_data <= buf_data[23:20];
-            g0_data <= buf_data[19:16];
-            b0_data <= buf_data[15:12];
-            r1_data <= buf_data[11:8];
-            g1_data <= buf_data[7:4];
-            b1_data <= buf_data[3:0];
+            r0_data <= buf_data[11:10];
+            g0_data <= buf_data[9:8];
+            b0_data <= buf_data[7:6];
+            r1_data <= buf_data[5:4];
+            g1_data <= buf_data[3:2];
+            b1_data <= buf_data[1:0];
             // r0_data={px_to_shift[0],px_to_shift[0],px_to_shift[0],px_to_shift[0]};
             // g0_data={px_to_shift[1],px_to_shift[1],px_to_shift[1],px_to_shift[1]};
             // b0_data={px_to_shift[2],px_to_shift[2],px_to_shift[2],px_to_shift[2]};
