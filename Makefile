@@ -38,7 +38,7 @@ app_zephyr: overlay
 
 configure: app_zephyr
 	sudo openFPGALoader -b colorlight-i5 -m ${GATE_DIR}/${TARGET}.bit 
-
+ 
 load_zephyr_app:
 	litex_term ${SERIAL} --kernel ${WORK_DIR}/build/zephyr/zephyr.bin
 	

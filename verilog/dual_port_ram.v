@@ -11,7 +11,7 @@ module dual_port_ram #(parameter IMAGEN="image.mem")(
     output reg [23:0] data_out_b,
     input [11:0]addr_b
 );
-reg [23:0] mem [2304:0];
+reg [23:0] mem [2303:0];
 
 initial begin
     $readmemb(IMAGEN,mem);

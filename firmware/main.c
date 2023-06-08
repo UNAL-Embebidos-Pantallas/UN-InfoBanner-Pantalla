@@ -115,15 +115,16 @@ static void vga_test(void)
 }
 */
 
-static void matrix_rgb_test(void)
+static void matrix_rgb_test(unsigned int *addr)
 {
+	volatile unsigned int *array = addr;
 	int x, y;
 	for(y=0; y<24; y++) {
 		for(x=0; x<96; x++) {
 			rgb_cntrl_wr_en_write(0);
 			rgb_cntrl_addr_a_write(y*96+x);
 			if(x<96/3)	
-				rgb_cntrl_rgb_indat_a_write(((int)(x/10)%2^(int)(y/10)%2)*15);
+				rgb_cntrl_rgb_indat_a_write(array[0]);
 			else if(x<2*96/3) 
 				rgb_cntrl_rgb_indat_a_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<4);
 			else 
@@ -162,6 +163,7 @@ static void console_service(void)
 	char *str;
 	char *token;
 	int i=0;
+	unsigned int addr = 0x40000000;
 	str = readstr();
 	if(str == NULL) return;
 	token = get_token(&str);
@@ -180,7 +182,7 @@ static void console_service(void)
 	// else if(strcmp(token, "infra") == 0)
 	// 	GPIO_infra_test();
 	else if(strcmp(token, "matrix") == 0)
-		matrix_rgb_test();
+		matrix_rgb_test(addr);
 	else if(strcmp(token, "move") == 0)
 		while(i!=10){
 			matrix_move();
