@@ -115,6 +115,44 @@ static void vga_test(void)
 }
 */
 
+static void save_data(unsigned int *addr)
+{	
+	volatile unsigned int *array = addr;
+	unsigned int red= 0x0; // First 12-bit value
+    unsigned int green = 0x0; // Second 12-bit value
+	unsigned int blue = 0x0; // Second 12-bit value
+
+
+    for (int i = 0; i < 7; i++) {
+		unsigned int rgb = (red << 8) | (green << 4) | blue;
+		array[i] = (rgb << 12) | rgb;
+		red++;
+		green++;
+		blue++;
+        addr++; // Move to the next address
+    }
+}
+
+static void from_mem(unsigned int *addr)
+{
+	volatile unsigned int *array = addr;
+	int x, y, i;
+	for(y=0; y<24; y++) {
+		i = 0;
+		for(x=0; x<96; x++) {
+			unsigned int value = *(addr + i);
+			rgb_cntrl_wr_en_write(0);
+			rgb_cntrl_addr_a_write(y*96+x);
+			rgb_cntrl_rgb_indat_a_write(value);
+			rgb_cntrl_wr_en_write(1);
+			addr++; // Move to the next address
+			if (i%12==0)
+				i++;
+		}
+	}
+}
+
+
 static void matrix_rgb_test(unsigned int *addr)
 {
 	volatile unsigned int *array = addr;
@@ -124,7 +162,7 @@ static void matrix_rgb_test(unsigned int *addr)
 			rgb_cntrl_wr_en_write(0);
 			rgb_cntrl_addr_a_write(y*96+x);
 			if(x<96/3)	
-				rgb_cntrl_rgb_indat_a_write(array[0]);
+				rgb_cntrl_rgb_indat_a_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<2);
 			else if(x<2*96/3) 
 				rgb_cntrl_rgb_indat_a_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<4);
 			else 
@@ -163,7 +201,7 @@ static void console_service(void)
 	char *str;
 	char *token;
 	int i=0;
-	unsigned int addr = 0x40000000;
+	unsigned int* addr = (unsigned int*)0x40000000;
 	str = readstr();
 	if(str == NULL) return;
 	token = get_token(&str);
@@ -183,6 +221,10 @@ static void console_service(void)
 	// 	GPIO_infra_test();
 	else if(strcmp(token, "matrix") == 0)
 		matrix_rgb_test(addr);
+	else if(strcmp(token, "from_mem") == 0)
+		from_mem(addr);
+	else if(strcmp(token, "save") == 0)
+		save_data(addr);
 	else if(strcmp(token, "move") == 0)
 		while(i!=10){
 			matrix_move();
