@@ -126,9 +126,9 @@ static void save_data(unsigned int *addr)
     for (int i = 0; i < 7; i++) {
 		unsigned int rgb = (red << 8) | (green << 4) | blue;
 		array[i] = (rgb << 12) | rgb;
-		red++;
-		green++;
-		blue++;
+		// red++;
+		// green++;
+		// blue++;
         addr++; // Move to the next address
     }
 }
@@ -146,7 +146,9 @@ static void from_mem(unsigned int *addr)
 			rgb_cntrl_rgb_indat_a_write(value);
 			rgb_cntrl_wr_en_write(1);
 			addr++; // Move to the next address
-			if (i%12==0)
+			if (i==7)
+				i=0;
+			else
 				i++;
 		}
 	}

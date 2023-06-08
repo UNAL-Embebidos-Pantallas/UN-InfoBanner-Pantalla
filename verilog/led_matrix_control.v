@@ -85,7 +85,7 @@ always @(posedge clk_25MHz) begin
             blank <= 0;
             next_line_begin <= 0;
             if (row_counter == 0) begin
-                if (pwm_counter == 15)
+                if (pwm_counter == 3)
                         // If we hit the lsb, wrap to the msb
                     pwm_counter <= 0;
                 else

@@ -3,7 +3,7 @@
 <device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
     <vendor>litex</vendor>
     <name>SOC</name>
-    <description><![CDATA[Litex SoC 2023-06-05 05:49:26]]></description>
+    <description><![CDATA[Litex SoC 2023-06-08 08:56:04]]></description>
 
     <addressUnitBits>8</addressUnitBits>
     <width>32</width>
@@ -40,8 +40,8 @@
                     <fields>
                         <field>
                             <name>rgb_indat_a</name>
-                            <msb>23</msb>
-                            <bitRange>[23:0]</bitRange>
+                            <msb>11</msb>
+                            <bitRange>[11:0]</bitRange>
                             <lsb>0</lsb>
                         </field>
                     </fields>

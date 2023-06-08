@@ -15,7 +15,7 @@ module rgb_display #(
 
     // Memory IO
     input wire [11:0] addr_a,
-    input wire [23:0] data_in_a, 
+    input wire [11:0] data_in_a, 
     input wire wr_en,
     input wire rd_en,
     
@@ -33,8 +33,8 @@ reg [5:0] rgb;
 
 // Memory
 reg [11:0] addr_b;
-reg [23:0] data_in_b;
-reg [23:0] data_out_b, data_out_a;  
+reg [11:0] data_in_b;
+reg [11:0] data_out_b, data_out_a;  
 wire we_rgb = 0;
 wire re_rgb;
 
