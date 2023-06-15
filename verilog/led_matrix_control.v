@@ -19,7 +19,7 @@ reg [4:0] row_counter = 0;
 reg [3:0] pwm_counter = 0;
 reg base_addr_reg = 1;
 assign row_addr = row_counter;
-assign next_line_pwm = pwm_counter;
+assign next_line_pwm = pwm_cousnter;
 assign next_line_addr = row_addr;
 assign base_addr = base_addr_reg;
 
