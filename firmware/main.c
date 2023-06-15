@@ -94,41 +94,15 @@ static void display_test(void)
 }
 
 
-/*
-static void vga_test(void)
-{
-	int x,y;
-	
-	for(y=0; y<480; y++) {
-		for(x=0; x<640; x++) {
-			vga_cntrl_mem_we_write(0);
-			vga_cntrl_mem_adr_write(y*640+x);
-			if(x<640/3)	
-				vga_cntrl_mem_data_w_write(((int)(x/10)%2^(int)(y/10)%2)*15);
-			else if(x<2*640/3) 
-				vga_cntrl_mem_data_w_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<4);
-			else 
-				vga_cntrl_mem_data_w_write((((int)(x/10)%2^(int)(y/10)%2)*15)<<8);
-			vga_cntrl_mem_we_write(1);
-		}
-	}
-}
-*/
-
 static void save_data(unsigned int *addr)
 {	
 	volatile unsigned int *array = addr;
-	unsigned int red= 0x0; // First 12-bit value
-    unsigned int green = 0x0; // Second 12-bit value
-	unsigned int blue = 0x0; // Second 12-bit value
+	unsigned int rgb = 0x001; // First 12-bit value
 
 
-    for (int i = 0; i < 7; i++) {
-		unsigned int rgb = (red << 8) | (green << 4) | blue;
-		array[i] = (rgb << 12) | rgb;
-		// red++;
-		// green++;
-		// blue++;
+    for (int i = 0; i < 5; i++) {
+		rgb *=2;
+		array[i] = -32766;
         addr++; // Move to the next address
     }
 }
@@ -146,7 +120,7 @@ static void from_mem(unsigned int *addr)
 			rgb_cntrl_rgb_indat_a_write(value);
 			rgb_cntrl_wr_en_write(1);
 			addr++; // Move to the next address
-			if (i==7)
+			if (i==5)
 				i=0;
 			else
 				i++;

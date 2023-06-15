@@ -44,6 +44,7 @@ wire next_line_begin;
 wire next_line_done;
 reg [4:0] next_line_addr;
 reg [6:0] next_line_pwm;
+wire base_addr;
 
 FD25MHz #()
 freq_div(
@@ -61,6 +62,7 @@ matrix_cntrl(
     .next_line_done(next_line_done),
     .next_line_addr(next_line_addr),
     .next_line_pwm(next_line_pwm),
+    .base_addr(base_addr),
     .ram_en(re_rgb)
 
 );
@@ -72,6 +74,7 @@ line_rndr(
     .done_out(next_line_done),
     .addr(next_line_addr),
     .pwm(next_line_pwm),
+    .base_addr(base_addr),
     .rgb_en(rgb_en),
     .rgb(rgb),
     .buf_data(data_out_b),

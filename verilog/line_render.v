@@ -4,13 +4,14 @@ module line_render (
     output wire done_out,
     input wire [4:0] addr,
     input wire [3:0] pwm,
+    input wire base_addr,
     output wire rgb_en,
     output wire [5:0] rgb,
     //Memory I/O
     input wire [11:0]buf_data,
     output wire [11:0]buf_addr,
 );
-    localparam px_per_row = 96;
+    localparam px_per_row = 98;
     reg [6:0] px_to_shift = 0;
     reg [5:0] rgb = 0;
     reg done_reg = 0;
@@ -39,7 +40,7 @@ module line_render (
             px_to_shift <= 0;
         end
         else if (px_to_shift != px_per_row) begin
-            buf_addr <= px_to_shift+96*addr;
+            buf_addr <= px_to_shift+96*(addr+1)*base_addr;
             r0_data <= buf_data[11:10];
             g0_data <= buf_data[9:8];
             b0_data <= buf_data[7:6];
