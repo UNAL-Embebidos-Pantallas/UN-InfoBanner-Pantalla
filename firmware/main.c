@@ -94,36 +94,57 @@ static void display_test(void)
 }
 
 
+static void save_test(unsigned int *addr)
+{	
+	volatile unsigned int *array = addr;
+	unsigned int rgb = 0xD07; // First 12-bit value
+	unsigned int rgb_aux;
+
+	printf("RGB : %i\n",rgb);
+	printf("Address : %i\n",addr);
+	array[0] = rgb;
+	rgb_aux = array[0];
+	printf("RGB AUX : %i\n",rgb_aux);
+}
+
 static void save_data(unsigned int *addr)
 {	
 	volatile unsigned int *array = addr;
-	unsigned int rgb = 0x001; // First 12-bit value
+	unsigned int rgb; // First 12-bit value
+	unsigned int dataRG = 0x0;
+	unsigned int dataBR = 0x0;
+	unsigned int dataGB = 0x0;
+	int i;
 
-
-    for (int i = 0; i < 5; i++) {
-		rgb *=2;
-		array[i] = -32766;
-        addr++; // Move to the next address
-    }
+	for(i =0; i<8; i++){
+		rgb = (dataRG << 8) | (dataBR << 4) | dataGB;
+		printf("RGB : %i\n",rgb);
+		printf("Address : %i\n",addr);
+		printf("i : %i\n",i);
+		array[i] = rgb;
+		dataBR++;
+		dataGB++;
+		dataRG++;
+	}
 }
 
 static void from_mem(unsigned int *addr)
 {
 	volatile unsigned int *array = addr;
-	int x, y, i;
+	int x, y; 
+	int i=0;
 	for(y=0; y<24; y++) {
-		i = 0;
 		for(x=0; x<96; x++) {
-			unsigned int value = *(addr + i);
+			unsigned int value = array[i];
 			rgb_cntrl_wr_en_write(0);
 			rgb_cntrl_addr_a_write(y*96+x);
 			rgb_cntrl_rgb_indat_a_write(value);
 			rgb_cntrl_wr_en_write(1);
 			addr++; // Move to the next address
-			if (i==5)
-				i=0;
-			else
+			printf("Address : %i\n",addr);
+			if ((x+1)%12==0){
 				i++;
+			}
 		}
 	}
 }
@@ -200,6 +221,8 @@ static void console_service(void)
 	else if(strcmp(token, "from_mem") == 0)
 		from_mem(addr);
 	else if(strcmp(token, "save") == 0)
+		save_test(addr);
+	else if(strcmp(token, "save_data") == 0)
 		save_data(addr);
 	else if(strcmp(token, "move") == 0)
 		while(i!=10){
