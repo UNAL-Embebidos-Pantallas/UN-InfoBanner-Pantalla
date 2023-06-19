@@ -22,6 +22,7 @@ from litedram.phy import GENSDRPHY, HalfRateGENSDRPHY #Physical interface for co
 from litespi.modules import GD25Q16 #For various SPI flash memory modules.
 from litespi.opcodes import SpiNorFlashOpCodes as Codes #SPI opcodes for communicating with SPI flash memory.
 from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII #Physical interface for communicating with Ethernet PHYs.
+from liteeth.phy.rmii import LiteEthPHYRMII
 from litex.soc.cores.bitbang import I2CMaster #Software implementation of I2C.
 from litedram.common import LiteDRAMNativePort
 from litescope import LiteScopeAnalyzer
@@ -38,17 +39,17 @@ _serial = [
         IOStandard("LVCMOS33")
      ),
 ]
-_leds = [
-    ("user_led", 0, Pins("U17"), IOStandard("LVCMOS33")),  # LED en la placa
-    ("user_led", 1, Pins("F3"), IOStandard("LVCMOS33")),  # LED externo
-]
+# _leds = [
+#     ("user_led", 0, Pins("U17"), IOStandard("LVCMOS33")),  # LED en la placa
+#     ("user_led", 1, Pins("F3"), IOStandard("LVCMOS33")),  # LED externo
+# ]
 
-_i2c = [("i2c", 0,
-            Subsignal("sda",   Pins("C17")),
-            Subsignal("scl",   Pins("B18")),
-            IOStandard("LVCMOS33"),
-        )
-]
+# _i2c = [("i2c", 0,
+#             Subsignal("sda",   Pins("C17")),
+#             Subsignal("scl",   Pins("B18")),
+#             IOStandard("LVCMOS33"),
+#         )
+# ]
 
 _rgb_matrix = [
         ("lat", 0, Pins("R17"), IOStandard("LVCMOS33")),
@@ -67,12 +68,12 @@ _rgb_matrix = [
         ("oe", 0, Pins("M17"), IOStandard("LVCMOS33")),
 ]
 
-_serial_debug = [("serial_debug", 0,
-            Subsignal("tx",   Pins("C4")),
-            Subsignal("rx",   Pins("A18")),
-            IOStandard("LVCMOS33"),
-        )
-]
+# _serial_debug = [("serial_debug", 0,
+#             Subsignal("tx",   Pins("C4")),
+#             Subsignal("rx",   Pins("A18")),
+#             IOStandard("LVCMOS33"),
+#         )
+# ]
 
 # CRG -----------------------------------------------------------------------------------------
 class _CRG(Module):
@@ -114,10 +115,10 @@ class BaseSoC(SoCCore):
         platform.add_source("./verilog/rgb_display.v")
         sys_clk_freq = int(100e6)
         platform.add_extension(_serial)
-        platform.add_extension(_leds)
-        platform.add_extension(_i2c)
+        # platform.add_extension(_leds)
+        # platform.add_extension(_i2c)
         platform.add_extension(_rgb_matrix)
-        platform.add_extension(_serial_debug)
+        # platform.add_extension(_serial_debug)
 
         # SoC with CPU ------------------------------------------------------------------------------
         SoCCore.__init__(
@@ -143,11 +144,11 @@ class BaseSoC(SoCCore):
             l2_cache_size = 8192,
         )
         # ETHERNET ---------------------------------------------------------------------------------
-        # self.ethphy = LiteEthPHYRGMII(
-        #   clock_pads = self.platform.request("eth_clocks", 0),
-        #   pads       = self.platform.request("eth", 0),
-        #   tx_delay = 0)
-        # self.add_ethernet(phy=self.ethphy)
+        self.ethphy = LiteEthPHYRMII(
+          clock_pads = self.platform.request("eth_clocks"),
+          pads       = self.platform.request("eth"),
+          refclk_cd  = None)
+        self.add_ethernet(phy=self.ethphy)
 
         # I2C --------------------------------------------------------------------------------------
         # self.i2c0 = I2CMaster(pads=platform.request("i2c"))
@@ -160,7 +161,7 @@ class BaseSoC(SoCCore):
         # SPI FLASH MEMORY -------------------------------------------------------------------------
         # self.add_spi_flash(mode="1x", module=GD25Q16(Codes.READ_1_1_1), with_master=True)  #What is the diference with master=false
 
-        # RGB Matrix Controller
+        # RGB Matrix Controller --------------------------------------------------------------------
         SoCCore.add_csr(self,"rgb_cntrl")
         row = Cat(*[platform.request("row", i) for i in range(5)])
         self.submodules.rgb_cntrl = RGBDisplay(platform.request("lat"),
