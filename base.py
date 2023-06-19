@@ -28,8 +28,8 @@ from litedram.common import LiteDRAMNativePort
 from litescope import LiteScopeAnalyzer
 
 # Own
-from ios import Led
-from rgb_display import RGBDisplay
+from modules.ios import Led
+from modules.rgb_display import RGBDisplay
 
 # IOs ------------------------------------------------------------------------
 _serial = [
