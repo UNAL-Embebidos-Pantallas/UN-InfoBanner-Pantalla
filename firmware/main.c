@@ -128,6 +128,25 @@ static void save_data(unsigned int *addr)
 	}
 }
 
+static void save_colors(unsigned int *addr)
+{	
+	volatile unsigned int *array = addr;
+	unsigned int rgb; // First 12-bit value
+	unsigned int dataA = 0x0;
+	unsigned int dataB = 0x0;
+	int i;
+
+	for(i = 0; i < 8; i++){
+		rgb = (dataA << 6) | dataB; // Concatenación de dataA (6 bits) y dataB (6 bits)
+		printf("RGB : %i\n", rgb);
+		printf("Address : %i\n", addr);
+		printf("i : %i\n", i);
+		array[i] = rgb;
+		dataA++;
+		dataB++;
+	}
+}
+
 static void from_mem(unsigned int *addr)
 {
 	volatile unsigned int *array = addr;
@@ -223,6 +242,8 @@ static void console_service(void)
 	else if(strcmp(token, "save") == 0)
 		save_test(addr);
 	else if(strcmp(token, "save_data") == 0)
+		save_data(addr);
+	else if(strcmp(token, "save_colors") == 0)
 		save_data(addr);
 	else if(strcmp(token, "move") == 0)
 		while(i!=10){
