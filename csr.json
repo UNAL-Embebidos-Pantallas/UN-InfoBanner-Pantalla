@@ -1,292 +1,326 @@
 {
     "csr_bases": {
-        "rgb_cntrl": 4026531840,
-        "ctrl": 4026533888,
-        "ethmac": 4026535936,
-        "ethphy": 4026537984,
-        "identifier_mem": 4026540032,
-        "sdram": 4026542080,
-        "timer0": 4026544128,
-        "uart": 4026546176
+        "rgb_cntrl": 2181038080,
+        "ctrl": 2181040128,
+        "ethmac": 2181042176,
+        "ethphy": 2181044224,
+        "identifier_mem": 2181046272,
+        "sdram": 2181048320,
+        "spisdcard": 2181050368,
+        "timer0": 2181052416,
+        "uart": 2181054464
     },
     "csr_registers": {
         "rgb_cntrl_addr_a": {
-            "addr": 4026531840,
+            "addr": 2181038080,
             "size": 1,
             "type": "rw"
         },
         "rgb_cntrl_rgb_indat_a": {
-            "addr": 4026531844,
+            "addr": 2181038084,
             "size": 1,
             "type": "rw"
         },
         "rgb_cntrl_wr_en": {
-            "addr": 4026531848,
+            "addr": 2181038088,
             "size": 1,
             "type": "rw"
         },
         "rgb_cntrl_rd_en": {
-            "addr": 4026531852,
+            "addr": 2181038092,
             "size": 1,
             "type": "rw"
         },
         "rgb_cntrl_ev_status": {
-            "addr": 4026531856,
+            "addr": 2181038096,
             "size": 1,
             "type": "ro"
         },
         "rgb_cntrl_ev_pending": {
-            "addr": 4026531860,
+            "addr": 2181038100,
             "size": 1,
             "type": "rw"
         },
         "rgb_cntrl_ev_enable": {
-            "addr": 4026531864,
+            "addr": 2181038104,
             "size": 1,
             "type": "rw"
         },
         "ctrl_reset": {
-            "addr": 4026533888,
+            "addr": 2181040128,
             "size": 1,
             "type": "rw"
         },
         "ctrl_scratch": {
-            "addr": 4026533892,
+            "addr": 2181040132,
             "size": 1,
             "type": "rw"
         },
         "ctrl_bus_errors": {
-            "addr": 4026533896,
+            "addr": 2181040136,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_writer_slot": {
-            "addr": 4026535936,
+            "addr": 2181042176,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_writer_length": {
-            "addr": 4026535940,
+            "addr": 2181042180,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_writer_errors": {
-            "addr": 4026535944,
+            "addr": 2181042184,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_writer_ev_status": {
-            "addr": 4026535948,
+            "addr": 2181042188,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_writer_ev_pending": {
-            "addr": 4026535952,
+            "addr": 2181042192,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_writer_ev_enable": {
-            "addr": 4026535956,
+            "addr": 2181042196,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_reader_start": {
-            "addr": 4026535960,
+            "addr": 2181042200,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_reader_ready": {
-            "addr": 4026535964,
+            "addr": 2181042204,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_reader_level": {
-            "addr": 4026535968,
+            "addr": 2181042208,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_reader_slot": {
-            "addr": 4026535972,
+            "addr": 2181042212,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_reader_length": {
-            "addr": 4026535976,
+            "addr": 2181042216,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_reader_ev_status": {
-            "addr": 4026535980,
+            "addr": 2181042220,
             "size": 1,
             "type": "ro"
         },
         "ethmac_sram_reader_ev_pending": {
-            "addr": 4026535984,
+            "addr": 2181042224,
             "size": 1,
             "type": "rw"
         },
         "ethmac_sram_reader_ev_enable": {
-            "addr": 4026535988,
+            "addr": 2181042228,
             "size": 1,
             "type": "rw"
         },
         "ethmac_preamble_crc": {
-            "addr": 4026535992,
+            "addr": 2181042232,
             "size": 1,
             "type": "ro"
         },
         "ethmac_rx_datapath_preamble_errors": {
-            "addr": 4026535996,
+            "addr": 2181042236,
             "size": 1,
             "type": "ro"
         },
         "ethmac_rx_datapath_crc_errors": {
-            "addr": 4026536000,
+            "addr": 2181042240,
             "size": 1,
             "type": "ro"
         },
         "ethphy_crg_reset": {
-            "addr": 4026537984,
+            "addr": 2181044224,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_control": {
-            "addr": 4026542080,
+            "addr": 2181048320,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_command": {
-            "addr": 4026542084,
+            "addr": 2181048324,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_command_issue": {
-            "addr": 4026542088,
+            "addr": 2181048328,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_address": {
-            "addr": 4026542092,
+            "addr": 2181048332,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_baddress": {
-            "addr": 4026542096,
+            "addr": 2181048336,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_wrdata": {
-            "addr": 4026542100,
+            "addr": 2181048340,
             "size": 1,
             "type": "rw"
         },
         "sdram_dfii_pi0_rddata": {
-            "addr": 4026542104,
+            "addr": 2181048344,
             "size": 1,
             "type": "ro"
         },
+        "spisdcard_control": {
+            "addr": 2181050368,
+            "size": 1,
+            "type": "rw"
+        },
+        "spisdcard_status": {
+            "addr": 2181050372,
+            "size": 1,
+            "type": "ro"
+        },
+        "spisdcard_mosi": {
+            "addr": 2181050376,
+            "size": 1,
+            "type": "rw"
+        },
+        "spisdcard_miso": {
+            "addr": 2181050380,
+            "size": 1,
+            "type": "ro"
+        },
+        "spisdcard_cs": {
+            "addr": 2181050384,
+            "size": 1,
+            "type": "rw"
+        },
+        "spisdcard_loopback": {
+            "addr": 2181050388,
+            "size": 1,
+            "type": "rw"
+        },
+        "spisdcard_clk_divider": {
+            "addr": 2181050392,
+            "size": 1,
+            "type": "rw"
+        },
         "timer0_load": {
-            "addr": 4026544128,
+            "addr": 2181052416,
             "size": 1,
             "type": "rw"
         },
         "timer0_reload": {
-            "addr": 4026544132,
+            "addr": 2181052420,
             "size": 1,
             "type": "rw"
         },
         "timer0_en": {
-            "addr": 4026544136,
+            "addr": 2181052424,
             "size": 1,
             "type": "rw"
         },
         "timer0_update_value": {
-            "addr": 4026544140,
+            "addr": 2181052428,
             "size": 1,
             "type": "rw"
         },
         "timer0_value": {
-            "addr": 4026544144,
+            "addr": 2181052432,
             "size": 1,
             "type": "ro"
         },
         "timer0_ev_status": {
-            "addr": 4026544148,
+            "addr": 2181052436,
             "size": 1,
             "type": "ro"
         },
         "timer0_ev_pending": {
-            "addr": 4026544152,
+            "addr": 2181052440,
             "size": 1,
             "type": "rw"
         },
         "timer0_ev_enable": {
-            "addr": 4026544156,
+            "addr": 2181052444,
             "size": 1,
             "type": "rw"
         },
         "timer0_uptime_latch": {
-            "addr": 4026544160,
+            "addr": 2181052448,
             "size": 1,
             "type": "rw"
         },
         "timer0_uptime_cycles": {
-            "addr": 4026544164,
+            "addr": 2181052452,
             "size": 2,
             "type": "ro"
         },
         "uart_rxtx": {
-            "addr": 4026546176,
+            "addr": 2181054464,
             "size": 1,
             "type": "rw"
         },
         "uart_txfull": {
-            "addr": 4026546180,
+            "addr": 2181054468,
             "size": 1,
             "type": "ro"
         },
         "uart_rxempty": {
-            "addr": 4026546184,
+            "addr": 2181054472,
             "size": 1,
             "type": "ro"
         },
         "uart_ev_status": {
-            "addr": 4026546188,
+            "addr": 2181054476,
             "size": 1,
             "type": "ro"
         },
         "uart_ev_pending": {
-            "addr": 4026546192,
+            "addr": 2181054480,
             "size": 1,
             "type": "rw"
         },
         "uart_ev_enable": {
-            "addr": 4026546196,
+            "addr": 2181054484,
             "size": 1,
             "type": "rw"
         },
         "uart_txempty": {
-            "addr": 4026546200,
+            "addr": 2181054488,
             "size": 1,
             "type": "ro"
         },
         "uart_rxfull": {
-            "addr": 4026546204,
+            "addr": 2181054492,
             "size": 1,
             "type": "ro"
         }
     },
     "constants": {
         "config_clock_frequency": 100000000,
-        "config_cpu_has_interrupt": null,
         "config_cpu_reset_addr": 0,
-        "config_cpu_has_dcache": null,
-        "config_cpu_has_icache": null,
-        "config_cpu_type_vexriscv": null,
+        "config_cpu_type_femtorv": null,
         "config_cpu_variant_standard": null,
-        "config_cpu_human_name": "vexriscv",
+        "config_cpu_human_name": "femtorv-standard",
         "config_cpu_nop": "nop",
-        "config_l2_size": 8192,
+        "uart_polling": null,
+        "config_l2_size": 32768,
         "config_csr_data_width": 32,
         "config_csr_alignment": 32,
         "config_bus_standard": "wishbone",
@@ -295,15 +329,12 @@
         "config_bus_bursting": 0,
         "ethmac_rx_slots": 2,
         "ethmac_tx_slots": 2,
-        "ethmac_slot_size": 2048,
-        "ethmac_interrupt": 2,
-        "timer0_interrupt": 1,
-        "uart_interrupt": 0
+        "ethmac_slot_size": 2048
     },
     "memories": {
         "rom": {
             "base": 0,
-            "size": 36864,
+            "size": 73728,
             "type": "cached"
         },
         "sram": {
@@ -322,7 +353,7 @@
             "type": "io"
         },
         "csr": {
-            "base": 4026531840,
+            "base": 2181038080,
             "size": 65536,
             "type": "io"
         }

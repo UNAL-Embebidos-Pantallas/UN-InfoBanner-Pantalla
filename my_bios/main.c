@@ -243,6 +243,22 @@ __attribute__((__used__)) int main(int i, char **c)
 		printf("(%d bytes)", size);
 	printf("\n");
 
+	unsigned int* addr = (unsigned int*)0x40100000;
+
+	volatile unsigned int *array = addr;
+	int x, y; 
+	for(y=0; y<24; y++) {
+		for(x=0; x<96; x++) {
+			unsigned int value = array[0];
+			rgb_cntrl_wr_en_write(0);
+			rgb_cntrl_addr_a_write(y*96+x);
+			rgb_cntrl_rgb_indat_a_write(value);
+			rgb_cntrl_wr_en_write(1);
+			addr++; // Move to the next address
+			//printf("Address : %i\n",addr);
+		}
+	}
+
 #if !defined(BIOS_CONSOLE_LITE) && !defined(BIOS_CONSOLE_NO_HISTORY)
 	hist_init();
 #endif

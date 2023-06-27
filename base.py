@@ -31,6 +31,9 @@ from litescope import LiteScopeAnalyzer
 from modules.ios import Led
 from modules.rgb_display import RGBDisplay
 
+kB = 1024
+mB = 1024*kB
+
 # IOs ------------------------------------------------------------------------
 _serial = [
     ("serial", 0,
@@ -123,10 +126,11 @@ class BaseSoC(SoCCore):
         # SoC with CPU ------------------------------------------------------------------------------
         SoCCore.__init__(
             self, platform,
-            cpu_type                 = "vexriscv",
+            cpu_type                 = "femtorv",
             clk_freq                 = sys_clk_freq,
             ident                    = "LiteX CPU RGB Matrix", ident_version=True,
-            integrated_rom_size      = 0x9000,
+            max_sdram_size           = 0x800000, # Limit mapped SDRAM to 2MB.
+            integrated_rom_size      = 0x12000,
             timer_uptime             = True)
         self.submodules.crg = _CRG(
             platform         = platform, 
@@ -141,7 +145,10 @@ class BaseSoC(SoCCore):
             phy           = self.sdrphy,
             module        = M12L64322A(sys_clk_freq,  "1:2"),
             origin        = self.mem_map["main_ram"],
-            l2_cache_size = 8192,
+            size          = 8*mB,
+            l2_cache_size = 0x8000,
+            l2_cache_min_data_width = 128,
+            l2_cache_reverse        = True
         )
         # ETHERNET ---------------------------------------------------------------------------------
         self.ethphy = LiteEthPHYRMII(
@@ -149,6 +156,10 @@ class BaseSoC(SoCCore):
           pads       = self.platform.request("eth"),
           refclk_cd  = None)
         self.add_ethernet(phy=self.ethphy)
+
+        # SDCARD ---------------------------------------------------------------------------------
+        platform.add_extension(colorlight_i5._sdcard_io)
+        self.add_spi_sdcard()
 
         # I2C --------------------------------------------------------------------------------------
         # self.i2c0 = I2CMaster(pads=platform.request("i2c"))
