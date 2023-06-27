@@ -225,6 +225,8 @@ __attribute__((__used__)) int main(int i, char **c)
 	printf("--======= \e[1mDone (No Console) \e[0m ==========--\n");
 #else
 	printf("--============= \e[1mConsole\e[0m ================--\n");
+	
+	// Ethernet ---------------------------------------------------------------
 	static unsigned int remote_ip[4] = {192,168,1,100};
 	unsigned int ip = IPTOINT(remote_ip[0], remote_ip[1], remote_ip[2], remote_ip[3]);
 	unsigned int local_ip[4] = {192, 168, 1, 50};
@@ -243,6 +245,7 @@ __attribute__((__used__)) int main(int i, char **c)
 		printf("(%d bytes)", size);
 	printf("\n");
 
+	// RGB Matrix --------------------------------------------------------------
 	unsigned int* addr = (unsigned int*)0x40100000;
 
 	volatile unsigned int *array = addr;
@@ -258,6 +261,8 @@ __attribute__((__used__)) int main(int i, char **c)
 			//printf("Address : %i\n",addr);
 		}
 	}
+
+	// SD CARD -----------------------------------------------------------------
 
 #if !defined(BIOS_CONSOLE_LITE) && !defined(BIOS_CONSOLE_NO_HISTORY)
 	hist_init();
